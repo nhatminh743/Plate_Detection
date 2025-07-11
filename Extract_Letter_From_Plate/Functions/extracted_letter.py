@@ -17,3 +17,5 @@ class PlateLetterExtractor:
                 extracted_letter_function.extract_letter_from_plate(self.save_dir, file_path, imshow=self.imshow)
 
         print("Processing completed.")
+
+

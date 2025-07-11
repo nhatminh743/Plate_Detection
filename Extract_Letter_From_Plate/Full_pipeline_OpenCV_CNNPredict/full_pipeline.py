@@ -35,6 +35,7 @@ def main_pipeline():
         folder_path=LETTER_DIR,
         output_dir=FINAL_RESULT_DIR,
         ALPHA=ALPHA,
+        add_blur=False,
     )
     prediction_model.predict_and_save()
 

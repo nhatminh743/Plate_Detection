@@ -31,7 +31,6 @@ def extract_letter_from_plate(save_path, filepath, imshow=False):
         labels = measure.label(morph_image, connectivity=2, background=0)
         properties = measure.regionprops(labels)
 
-        # Sort regions by X position (min column) to process left-to-right
         properties = sorted(properties, key=lambda prop: prop.bbox[1])
 
         mask = np.zeros_like(gray)
@@ -74,4 +73,4 @@ def extract_letter_from_plate(save_path, filepath, imshow=False):
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-    # print(f"Successfully extracted {total_ROI} letters from plate halves and saved to: {base_dir}")
+    print(f"Successfully extracted {total_ROI} letters from plate halves and saved to: {base_dir}")
