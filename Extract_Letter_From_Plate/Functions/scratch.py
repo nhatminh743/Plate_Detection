@@ -1,6 +1,5 @@
 import keras
 import cv2
-import tensorflow as tf
 import numpy as np
 
 # Load model
@@ -8,7 +7,7 @@ model_dir = r'/home/minhpn/Desktop/Green_Parking/CNN_Recognize/CNN_Model.keras'
 model = keras.models.load_model(model_dir)
 
 # Read image
-image_path = '/home/minhpn/Desktop/Green_Parking/Small_Dummy_Data/Extracted_Letter/0230_01270_b_plate/ROI_3.jpg'
+image_path = '/home/minhpn/Desktop/Green_Parking/Small_Dummy_Data/Extracted_Letter/0230_01270_b_plate/ROI_0.jpg'
 image = cv2.imread(image_path)
 
 # Preprocess image (Normalization)
