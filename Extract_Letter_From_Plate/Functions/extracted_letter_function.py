@@ -18,12 +18,10 @@ def extract_letter_from_plate(save_path, filepath, imshow=False):
     morph_image = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
 
     # Find contours
-    cnts = cv2.findContours(morph_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
-    cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+    cnts, hierarchy = cv2.findContours(morph_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     image_copy = image.copy()
-    cv2.drawContours(image_copy, cnts, -1, 255, 2)
+    cv2.drawContours(image_copy, cnts, -1, (255,1,1), 2)
     if imshow:
         cv2.imshow("Image", image_copy)
 
@@ -44,8 +42,8 @@ def extract_letter_from_plate(save_path, filepath, imshow=False):
             x, y, w, h = cv2.boundingRect(c)
             ratio = h / float(w)
             if 0.89 < ratio < 5:
-                ROI = 255 - thresh[y:y + h, x:x + w]
-                cv2.drawContours(mask, [c], -1, (255, 255, 255), -1)
+                ROI = thresh[y:y+h, x:x+w]
+                cv2.rectangle(mask, (x, y), (x + w, y + h), (255, 255, 255), -1)
                 save_path_roi = os.path.join(new_dir, f'ROI_{ROI_number}.jpg')
                 cv2.imwrite(save_path_roi, ROI)
                 ROI_number += 1

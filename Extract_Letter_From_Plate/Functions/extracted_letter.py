@@ -13,7 +13,7 @@ save_dir = r'/home/minhpn/Desktop/Green_Parking/Small_Dummy_Data/Extracted_Lette
 #         nothing = extract_letter_from_plate(save_dir, file_path, imshow=True)
 #         break
 
-file_path = '/home/minhpn/Desktop/Green_Parking/Small_Dummy_Data/Extracted_Plate_Data/0229_05817_b_plate.jpg'
+file_path = '/home/minhpn/Desktop/Green_Parking/Small_Dummy_Data/Extracted_Plate_Data/0230_01270_b_plate.jpg'
 
 nothing = extract_letter_from_plate(save_dir, file_path, imshow=True)
 
