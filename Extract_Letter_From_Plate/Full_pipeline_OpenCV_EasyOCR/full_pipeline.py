@@ -1,9 +1,9 @@
 import Extract_Letter_From_Plate.Functions as F
 
 # Paths
-RAW_DATA_DIR = r'/Test_models/Data'
-EXTRACTED_PLATE_DIR = r'/Test_models/OpenCV_EasyOCR/Extracted_Plate_Data'
-FINAL_RESULT_DIR = r'/Test_models/OpenCV_EasyOCR/Final_Result'
+RAW_DATA_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/Data'
+EXTRACTED_PLATE_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/OpenCV_EasyOCR/Extracted_Plate_Data'
+FINAL_RESULT_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/OpenCV_EasyOCR/Final_Result'
 
 def main_pipeline():
     # Step 1: Plate Extraction

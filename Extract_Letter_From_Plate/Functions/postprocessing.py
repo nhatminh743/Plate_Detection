@@ -37,10 +37,8 @@ def cleanUpPlate(plate):
         for character in uppercased_cleaned_plate:
             if is_number(character) or is_letter(character):
                 new_uppercased_cleaned_plate += character
-
     else:
         new_uppercased_cleaned_plate = uppercased_cleaned_plate
-
     if len(new_uppercased_cleaned_plate) <4:
         return None
     third = new_uppercased_cleaned_plate[2]

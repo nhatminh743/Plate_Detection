@@ -1,8 +1,12 @@
 import sys
-sys.path.append('/Test_models')
+sys.path.append('/home/minhpn/Desktop/Green_Parking/Test_models')
 
-from report import compare_txt_files
+from report_function import compare_txt_files
 
-test_dir = '/Test_models/Validation.txt'
-validate_dir = '/Test_models/OpenCV_EasyOCR/Final_Result/ocr_results.txt'
-compare_txt_files(test_dir, validate_dir)
+def report_result_OpenCV_EasyOCR(long_report=True):
+    test_dir = '/home/minhpn/Desktop/Green_Parking/Test_models/Validation.txt'
+    validate_dir = '/home/minhpn/Desktop/Green_Parking/Test_models/OpenCV_EasyOCR/Final_Result/ocr_results.txt'
+    compare_txt_files(test_dir, validate_dir, long_report=long_report)
+
+if __name__ == '__main__':
+    report_result_OpenCV_EasyOCR()
