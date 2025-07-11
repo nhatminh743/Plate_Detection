@@ -1,4 +1,3 @@
-
 def remove_specific_characters(text):
     for char in [';', ',', '-', '.', "'", '*', ' ', ":", '_', '+', '"']:
         text = text.replace(char, '')
@@ -81,6 +80,6 @@ char_map_for_number = {
     ('B', 'U'): '8',
     ('P'): '3',
     ('J'): '5',
-    ('O'): '0'
+    ('O', 'D'): '0',
 }
 

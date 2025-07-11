@@ -1,7 +1,8 @@
 import cv2
 import imutils
 import numpy as np
-import utils
+from Extract_Letter_From_Plate.Functions import utils
+
 
 def detect_license_plate(image, imshow_mode = False):
     original_image = image.copy()

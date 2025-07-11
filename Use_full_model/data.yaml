@@ -1,7 +1,0 @@
-path: /home/minhpn/Desktop/Green_Parking/Use_full_model/data
-train: train/images
-val: validation/images
-
-nc: 1
-
-names: ["LP"]

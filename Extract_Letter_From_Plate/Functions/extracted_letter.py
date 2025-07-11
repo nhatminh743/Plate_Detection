@@ -1,19 +1,19 @@
-from extracted_letter_function import extract_letter_from_plate
-import cv2
 import os
-import keras
+from . import extracted_letter_function
 
-data_dir = r'/home/minhpn/Desktop/Green_Parking/Small_Dummy_Data/Extracted_Plate_Data'
-save_dir = r'/home/minhpn/Desktop/Green_Parking/Small_Dummy_Data/Extracted_Letter'
+class PlateLetterExtractor:
+    def __init__(self, data_dir, save_dir, imshow=False):
+        self.data_dir = data_dir
+        self.save_dir = save_dir
+        self.imshow = imshow
 
-# for filename in os.listdir(data_dir):
-#     if filename.lower().endswith('.jpg'):
-#         file_path = os.path.join(data_dir, filename)
-#
-#         nothing = extract_letter_from_plate(save_dir, file_path, imshow=True)
-#         break
+        os.makedirs(self.save_dir, exist_ok=True)
 
-file_path = '/home/minhpn/Desktop/Green_Parking/Small_Dummy_Data/Extracted_Plate_Data/0230_01270_b_plate.jpg'
+    def extract_letters(self):
+        for filename in os.listdir(self.data_dir):
+            if filename.lower().endswith('.jpg'):
+                file_path = os.path.join(self.data_dir, filename)
+                # print(f"Processing {file_path} ...")
+                extracted_letter_function.extract_letter_from_plate(self.save_dir, file_path, imshow=self.imshow)
 
-nothing = extract_letter_from_plate(save_dir, file_path, imshow=True)
-
+        print("Processing completed.")

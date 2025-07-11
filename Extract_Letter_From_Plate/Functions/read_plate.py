@@ -2,8 +2,6 @@ import cv2
 import easyocr
 import os
 
-from tensorflow.python.ops.numpy_ops.np_dtypes import uint8
-
 from . import postprocessing
 from skimage.filters import threshold_local
 

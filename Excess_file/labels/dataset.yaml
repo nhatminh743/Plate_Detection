@@ -1,7 +1,0 @@
-names:
-- LP
-- LPd
-nc: 2
-path: ..
-train: /home/minhpn/Desktop/Green_Parking/Use_full_model/labels/images
-val: /home/minhpn/Desktop/Green_Parking/Use_full_model/labels/images
