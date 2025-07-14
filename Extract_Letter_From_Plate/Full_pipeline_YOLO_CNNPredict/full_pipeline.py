@@ -1,5 +1,5 @@
 import Extract_Letter_From_Plate.Functions as F
-from Extract_Letter_From_Plate.Full_pipeline_YOLO_EasyOCR.helper_function import extract_plate
+from Extract_Letter_From_Plate.Full_pipeline_YOLO_EasyOCR.helper_function import extracted_plate_YOLO
 
 ALPHA = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
          'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',

@@ -1,5 +1,5 @@
 import Extract_Letter_From_Plate.Functions as F
-from Extract_Letter_From_Plate.Full_pipeline_YOLO_EasyOCR.helper_function import extract_plate
+from Extract_Letter_From_Plate.Full_pipeline_YOLO_EasyOCR.helper_function import extracted_plate_YOLO
 
 # Paths
 RAW_DATA_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/Data'
@@ -9,7 +9,7 @@ YOLO_model_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_tra
 
 def main_pipeline():
     # Step 1: Plate Extraction
-    extractor = extract_plate.PlateExtractor(
+    extractor = extracted_plate_YOLO.PlateExtractor(
         data_dir=RAW_DATA_DIR,
         save_dir=EXTRACTED_PLATE_DIR,
         best_model_file= YOLO_model_dir,

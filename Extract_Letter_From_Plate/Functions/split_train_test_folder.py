@@ -44,3 +44,8 @@ def split_dataset(data_dir, train_dir, val_dir, val_split=0.2, move_files=False)
     print(f"Train: {len(train_files)} images")
     print(f"Validation: {len(val_files)} images")
 
+split_dataset(data_dir=r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_Detect_Number_From_Plate/data/Raw',
+              train_dir=r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_Detect_Number_From_Plate/data/train/images',
+              val_dir=r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_Detect_Number_From_Plate/data/validation/images',
+              val_split=0.2,
+              move_files=True)
