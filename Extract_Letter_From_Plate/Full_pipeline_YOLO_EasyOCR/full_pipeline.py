@@ -2,8 +2,8 @@ import Extract_Letter_From_Plate.Functions as F
 from Extract_Letter_From_Plate.Full_pipeline_YOLO_EasyOCR.helper_function import extracted_plate_YOLO
 
 # Paths
-RAW_DATA_DIR = r'/home/minhpn/Desktop/Green_Parking/Model_training/Temp/train/raw_image'
-EXTRACTED_PLATE_DIR = r'/home/minhpn/Desktop/Green_Parking/Model_training/Temp/train/images'
+RAW_DATA_DIR = r'/Model_training/YOLO_to_labelme_func/train/raw_image'
+EXTRACTED_PLATE_DIR = r'/Model_training/YOLO_to_labelme_func/train/images'
 FINAL_RESULT_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_EasyOCR/Final_Result'
 YOLO_model_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_training/runs/detect/train2/weights/best.pt'
 
