@@ -1,7 +1,6 @@
 import os
 from ultralytics import YOLO
 
-
 class LetterExtractor:
     def __init__(self, data_dir, save_dir, best_model_file, debug_mode=False):
         self.model_file = best_model_file
@@ -31,8 +30,12 @@ class LetterExtractor:
             y_center = (box.xyxy[0][1] + box.xyxy[0][3]) / 2
             detections.append((x_center.item(), y_center.item(), class_name))
 
+        output_path = os.path.join(self.save_dir, 'ocr_results.txt')
+
         if not detections:
             print(f"No characters detected in {filename}")
+            with open(output_path, 'a') as f:
+                f.write(f"{filename[:12]}.jpg: None\n")
             return
 
         y_values = [d[1] for d in detections]
@@ -53,9 +56,10 @@ class LetterExtractor:
             print(f"{filename}: Raw Prediction = {predicted_text}")
             print(f"{filename}: Formatted Plate = {predicted_text_process}")
 
-        output_path = os.path.join(self.save_dir, 'ocr_results.txt')
+
         with open(output_path, 'a') as f:
-            f.write(f'{filename[:12]}: {predicted_text_process}\n')
+            f.write(f'{filename[:12]}.jpg: {predicted_text_process}\n')
             print(f"Finished processing {filename[:12]}")
+
 
 
