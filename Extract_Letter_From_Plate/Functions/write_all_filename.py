@@ -34,4 +34,4 @@ def write_filenames_to_txt(root_dir, output_txt_path, recursive=False):
     print(f"Saved {len(file_list)} sorted file names to {output_txt_path}")
 
 
-write_filenames_to_txt("/Test_models/Data", output_txt_path="/home/minhpn/Desktop/Green_Parking/Test_models/Validation.txt", recursive=True)
+# write_filenames_to_txt("/home/minhpn/Desktop/Green_Parking/Test_models/Data", output_txt_path="/home/minhpn/Desktop/Green_Parking/Test_models/Validation.txt", recursive=True)

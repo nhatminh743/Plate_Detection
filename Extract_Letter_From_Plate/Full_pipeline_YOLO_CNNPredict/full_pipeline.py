@@ -1,5 +1,5 @@
 import Extract_Letter_From_Plate.Functions as F
-from Extract_Letter_From_Plate.Full_pipeline_YOLO_EasyOCR.helper_function import extracted_plate_YOLO
+from Extract_Letter_From_Plate.Functions.YOLO_plate_func import extracted_plate_YOLO
 
 ALPHA = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
          'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
@@ -8,11 +8,11 @@ ALPHA = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 
 # Paths
 RAW_DATA_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/Data'
-EXTRACTED_PLATE_DIR = r'/home/minhpn/Desktop/Green_Parking/Result/YOLO_CNN/Extracted_Plate_Data'
-LETTER_DIR = r'/home/minhpn/Desktop/Green_Parking/Result/YOLO_CNN/Extracted_Letter_Data'
-FINAL_RESULT_DIR = r'/home/minhpn/Desktop/Green_Parking/Result/YOLO_CNN/Final_Result'
+EXTRACTED_PLATE_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_CNN/Extracted_Plate_Data'
+LETTER_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_CNN/Extracted_Letter_Data'
+FINAL_RESULT_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_CNN/Final_Result'
 model_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/CNN_training/CNN_Model.keras'
-YOLO_model_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_training/runs/detect/train2/weights/best.pt'
+YOLO_model_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_training/runs/detect/train3/weights/best.pt'
 
 def main_pipeline():
     # Step 1: Plate Extraction
