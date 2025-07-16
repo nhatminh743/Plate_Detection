@@ -125,7 +125,7 @@ def crop_and_save_rois(rgb, result, save_dir, filename, conf_threshold=0.5):
     Parameters:
       - rgb: numpy array of the RGB image.
       - result: YOLO prediction result.
-      - save_dir: directory to save cropped images.
+      - save_dir: directory to save cropped raw_image.
       - conf_threshold: confidence threshold to filter predictions.
     """
     os.makedirs(save_dir, exist_ok=True)

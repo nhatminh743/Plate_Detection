@@ -30,7 +30,7 @@ def print_dataset_structure(root_dir, indent="", is_last=True):
             continue
 
         if os.path.isdir(item_path):
-            # Count images and labels inside this folder
+            # Count raw_image and labels inside this folder
             img_count = count_image_files(item_path)
             lbl_count = count_label_files(item_path)
             counts = []

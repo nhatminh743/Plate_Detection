@@ -4,10 +4,10 @@ import base64
 from PIL import Image
 
 #Change dir from linux to window
-image_dir = r'C:\Users\ACER\Documents\nhatminh743\Plate_Detection/Model_training/Temp/validate/images'
-label_dir = r'C:\Users\ACER\Documents\nhatminh743\Plate_Detection/Model_training/Temp/validate/labels'
-output_dir = r'C:\Users\ACER\Documents\nhatminh743\Plate_Detection/Model_training/Temp/validate/json_output'
-class_txt = r'C:\Users\ACER\Documents\nhatminh743\Plate_Detection\Model_training\YOLOv11_Detect_Number_From_Plate\data\validation\labels\classes.txt'
+image_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/Temp/train/images'
+label_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/Temp/train/temp_txt'
+output_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/Temp/train/json_output'
+class_txt = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_Detect_Number_From_Plate/data/train/labels/classes.txt'
 label_names = [str(i) for i in range(10)] + [chr(ord('A') + i) for i in range(26)]
 
 for filename in os.listdir(label_dir):

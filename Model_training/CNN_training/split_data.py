@@ -4,12 +4,12 @@ import random
 
 def split_dataset(dataset_dir, val_dir, val_ratio=0.2, copy=False):
     """
-    Splits dataset by moving/copying val_ratio images into val_dir.
+    Splits dataset by moving/copying val_ratio raw_image into val_dir.
 
     Args:
         dataset_dir (str): Path to the dataset directory.
         val_dir (str): Path to the validation directory.
-        val_ratio (float): Proportion of images to use for validation.
+        val_ratio (float): Proportion of raw_image to use for validation.
         copy (bool): If True, copy files. If False, move files.
     """
     os.makedirs(val_dir, exist_ok=True)
@@ -34,7 +34,7 @@ def split_dataset(dataset_dir, val_dir, val_ratio=0.2, copy=False):
             else:
                 shutil.move(src, dst)
 
-        print(f"{class_folder}: {num_val} images {'copied' if copy else 'moved'} to validation.")
+        print(f"{class_folder}: {num_val} raw_image {'copied' if copy else 'moved'} to validation.")
 
 
 # Example usage:

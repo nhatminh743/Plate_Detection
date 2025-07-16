@@ -1,6 +1,6 @@
 path: /home/minhpn/Desktop/Green_Parking/YOLOv11_training/data
-train: train/images
-val: validation/images
+train: train/raw_image
+val: validation/raw_image
 
 nc: 1
 

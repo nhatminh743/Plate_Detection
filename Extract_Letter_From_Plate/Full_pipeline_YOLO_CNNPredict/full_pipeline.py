@@ -16,7 +16,7 @@ YOLO_model_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_tra
 
 def main_pipeline():
     # Step 1: Plate Extraction
-    extractor = extract_plate.PlateExtractor(
+    extractor = extracted_plate_YOLO.PlateExtractor(
         data_dir=RAW_DATA_DIR,
         save_dir=EXTRACTED_PLATE_DIR,
         best_model_file= YOLO_model_dir,

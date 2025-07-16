@@ -3,7 +3,7 @@ import cv2
 
 def threshold_images(source_dir, target_dir, thresh_value=127):
     """
-    Threshold all images in source_dir and save to target_dir preserving folder structure.
+    Threshold all raw_image in source_dir and save to target_dir preserving folder structure.
     """
     for root, _, files in os.walk(source_dir):
         for file in files:

@@ -12,5 +12,3 @@ __all__ = ['PlateExtractor',
            'split_dataset',
            'write_filenames_to_txt'
 ]
-
-'0122_01404_b.jpg'

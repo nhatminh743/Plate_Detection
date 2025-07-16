@@ -2,8 +2,8 @@ import Extract_Letter_From_Plate.Functions as F
 from Extract_Letter_From_Plate.Full_pipeline_YOLO_EasyOCR.helper_function import extracted_plate_YOLO
 
 # Paths
-RAW_DATA_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/Data'
-EXTRACTED_PLATE_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_EasyOCR/Extracted_Plate_Data'
+RAW_DATA_DIR = r'/home/minhpn/Desktop/Green_Parking/Model_training/Temp/train/raw_image'
+EXTRACTED_PLATE_DIR = r'/home/minhpn/Desktop/Green_Parking/Model_training/Temp/train/images'
 FINAL_RESULT_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_EasyOCR/Final_Result'
 YOLO_model_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_training/runs/detect/train2/weights/best.pt'
 
@@ -17,11 +17,11 @@ def main_pipeline():
     extractor.process_images()
 
     # Step 2: OCR Processing
-    ocr_processor = F.PlateOCRProcessor(
-        data_dir=EXTRACTED_PLATE_DIR,
-        save_dir=FINAL_RESULT_DIR
-    )
-    ocr_processor.process_images()
+    # ocr_processor = F.PlateOCRProcessor(
+    #     data_dir=EXTRACTED_PLATE_DIR,
+    #     save_dir=FINAL_RESULT_DIR
+    # )
+    # ocr_processor.process_images()
 
 if __name__ == '__main__':
     main_pipeline()

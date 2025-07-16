@@ -133,7 +133,7 @@ while True:
     # Load frame from image source
     if source_type == 'image' or source_type == 'folder': # If source is image or image folder, load the image using its filename
         if img_count >= len(imgs_list):
-            print('All images have been processed. Exiting program.')
+            print('All raw_image have been processed. Exiting program.')
             sys.exit(0)
         img_filename = imgs_list[img_count]
         frame = cv2.imread(img_filename)
@@ -210,7 +210,7 @@ while True:
     cv2.imshow('YOLO detection results',frame) # Display image
     if record: recorder.write(frame)
 
-    # If inferencing on individual images, wait for user keypress before moving to next image. Otherwise, wait 5ms before moving to next frame.
+    # If inferencing on individual raw_image, wait for user keypress before moving to next image. Otherwise, wait 5ms before moving to next frame.
     if source_type == 'image' or source_type == 'folder':
         key = cv2.waitKey()
     elif source_type == 'video' or source_type == 'usb' or source_type == 'picamera':
