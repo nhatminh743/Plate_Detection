@@ -1,6 +1,6 @@
-path: /home/minhpn/Desktop/Green_Parking/YOLOv11_training/data
-train: train/raw_image
-val: validation/raw_image
+path: C:\Users\ACER\Documents\nhatminh743\Plate_Detection\Model_training\YOLOv11_training\data
+train: train\images
+val: validation\images
 
 nc: 1
 
