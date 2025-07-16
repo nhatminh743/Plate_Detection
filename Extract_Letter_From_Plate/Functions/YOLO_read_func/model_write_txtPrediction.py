@@ -1,18 +1,23 @@
-# Create a YOLOv8 model
+import os
+import numpy as np
 from ultralytics import YOLO
+import cv2
 
 model = YOLO('/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_Detect_Number_From_Plate/runs/content/runs/detect/train2/weights/best.pt')
 
-# Read the image and perform object detection on it
-image_path = "/home/minhpn/Desktop/Green_Parking/Dummy_Data_For_Small_Test/Extracted_Plate_Data/0228_01392_b_plate.jpg"
-info_path = r'/home/minhpn/Desktop/Green_Parking/Dummy_Data_For_Small_Test/Final_Result/ocr_results.txt'
-res = model.predict(image_path)[0]
+image_dir = "/home/minhpn/Desktop/Green_Parking/Dummy_Data_For_Small_Test/Extracted_Plate_Data/0229_05817_b_plate.jpg"
+output_dir = '/home/minhpn/Desktop/Green_Parking/Dummy_Data_For_Small_Test/Final_Result'
 
-names = model.model.names
+os.makedirs(output_dir, exist_ok=True)
 
-for box in res.boxes:
-    cls_id = int(box.cls[0])
-    class_name = names[cls_id]
-    x_center = (box.xyxy[0][0] + box.xyxy[0][2]) / 2
-    y_center = (box.xyxy[0][1] + box.xyxy[0][3]) / 2
-    detections.append((x_center.item(), y_center.item(), class_name))
+results = model.predict(image_dir)[0]
+
+# Plot results and get PIL image
+img = results.plot(font_size=10, pil=True, line_width=2)
+
+# Convert PIL image to OpenCV-compatible format
+img_cv = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+
+# Save the image
+cv2.imwrite(os.path.join(output_dir, os.path.basename(image_dir)), img_cv)
+

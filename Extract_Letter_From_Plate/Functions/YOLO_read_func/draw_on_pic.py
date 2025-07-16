@@ -1,53 +1,29 @@
-#For input, enter the label file in text format
-
-
-
-
-def get_coord(label_file, img_width, img_height):
-
-    lfile = open(label_file)
-    coords = []
-    all_coords = []
-    all_coords1 = []
-
-    for line in lfile:
-        l = line.split(" ")
-
-        coords = list(map(float, list(map(float, l[1:5]))))
-        x1 = float(img_width) * (2.0 * float(coords[0]) - float(coords[2])) / 2.0
-        y1 = float(img_height) * (2.0 * float(coords[1]) - float(coords[3])) / 2.0
-        x2 = float(img_width) * (2.0 * float(coords[0]) + float(coords[2])) / 2.0
-        y2 = float(img_height) * (2.0 * float(coords[1]) + float(coords[3])) / 2.0
-
-        int_x1 = int(x1)
-        int_x2 = int(x2)
-        int_y1 = int(y1)
-        int_y2 = int(y2)
-
-        tmp1 = (int_x1,int_y1)
-        tmp2 = (int_x2,int_y2)
-        tmp3 = [tmp1, tmp2]
-        tmp = [x1, y1, x2, y2]
-        all_coords.append(tmp3)
-
-      all_coords1.append(list(map(int, tmp)))
-      #all_coords is a list of tupples to be drawn back into the image
-      #all_coords1 is a list of cordinates
-    lfile.close()
-    return all_coords, all_coords1
-
+import os
+import numpy as np
+from ultralytics import YOLO
 import cv2
-coords, coords1 = get_coord('ac_301_b.txt', 987,987)
-print(coords)
-print(coords1)
+from PIL import Image
 
-#image file should be the one you would like to write your cordinates on
-image = cv2.imread('ac_301_b.jpg')
-thickness = 2
-color = (0, 255, 0) # Green color
-for dimensions in coords:
-    print(dimensions)
-    cv2.rectangle(image, dimensions[0], dimensions[1], color, thickness)
+model = YOLO('/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_Detect_Number_From_Plate/runs/content/runs/detect/train2/weights/best.pt')
 
-#print(image)
-image = cv2.imwrite('imageWithRectCords.png', image)
+image_path = "/home/minhpn/Desktop/Green_Parking/Dummy_Data_For_Small_Test/Extracted_Plate_Data/0229_05817_b_plate.jpg"
+output_dir = '/home/minhpn/Desktop/Green_Parking/Dummy_Data_For_Small_Test/Final_Result'
+os.makedirs(output_dir, exist_ok=True)
+
+# Load image
+original_image = Image.open(image_path)
+scale_factor = 6  # or any number you like
+
+# Resize image before detection
+new_size = (original_image.width * scale_factor, original_image.height * scale_factor)
+resized_image = original_image.resize(new_size, Image.BICUBIC)
+
+# Run detection on resized image
+results = model.predict(source=resized_image, save=False, imgsz=new_size)[0]
+
+# Plot results
+img_with_boxes = results.plot(font_size=scale_factor * 10, pil=True, line_width=scale_factor * 2)
+
+# Save image
+output_path = os.path.join(output_dir, os.path.basename(image_path))
+img_with_boxes.save(output_path)
