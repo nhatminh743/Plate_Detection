@@ -56,7 +56,7 @@ def remap_yolo_labels(labels_dir, old_class_file, new_class_file):
     print(f"[✓] Remapped all label files in: {labels_dir}")
 
 remap_yolo_labels(
-    labels_dir='/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_Detect_Number_From_Plate/data/validation/labels',  # or val/labels
+    labels_dir='/Model_training/YOLOv11_Detect_Number_From_Plate/data/validation/labels',  # or val/labels
     old_class_file=r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_Detect_Number_From_Plate/data/validation/classes.txt',
     new_class_file=r'/Model_training/YOLOv11_Detect_Number_From_Plate/data/validation/labels/classes.txt'
 )
