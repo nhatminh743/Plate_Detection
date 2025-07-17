@@ -21,6 +21,7 @@ def main_pipeline():
         data_dir = EXTRACTED_PLATE_DIR,
         save_dir = FINAL_RESULT_DIR,
         best_model_file = YOLO_read_dir,
+        debug_mode=True,
     )
     read.process_images()
 

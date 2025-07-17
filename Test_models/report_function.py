@@ -1,4 +1,4 @@
-def compare_txt_files(file1_path, file2_path, long_report = True):
+def compare_txt_files(file1_path, file2_path, saved = False, long_report = True):
     """
     Compare two text files line by line and report matching accuracy.
 
@@ -6,6 +6,9 @@ def compare_txt_files(file1_path, file2_path, long_report = True):
         file1_path (str): Path to the first TXT file.
         file2_path (str): Path to the second TXT file.
     """
+
+    list_of_mismatched = []
+
     with open(file1_path, 'r') as f1, open(file2_path, 'r') as f2:
         lines1 = f1.readlines()
         lines2 = f2.readlines()
@@ -25,12 +28,21 @@ def compare_txt_files(file1_path, file2_path, long_report = True):
         if line1 == line2:
             match_count += 1
         else:
-            mismatch_count += 1
-            if long_report:
-                print(f"Mismatch at line {idx + 1}:")
-                print(f"  File 1: {line1}")
-                print(f"  File 2: {line2}")
-                print("-" * 40)
+            if saved == False:
+                mismatch_count += 1
+                if long_report:
+                    print(f"Mismatch at line {idx + 1}:")
+                    print(f"  File 1: {line1}")
+                    print(f"  File 2: {line2}")
+                    print("-" * 40)
+            else:
+                mismatch_count += 1
+                if long_report:
+                    print(f"Mismatch at line {idx + 1}:")
+                    print(f"  File 1: {line1}")
+                    print(f"  File 2: {line2}")
+                    print("-" * 40)
+                list_of_mismatched.append(line1[:12])
 
     accuracy = (match_count / total_lines) * 100 if total_lines > 0 else 0
 
@@ -39,3 +51,6 @@ def compare_txt_files(file1_path, file2_path, long_report = True):
     print(f"Matching Lines       : {match_count}")
     print(f"Mismatched Lines     : {mismatch_count}")
     print(f"Accuracy             : {accuracy:.2f}%")
+
+    if saved==True:
+        return list_of_mismatched

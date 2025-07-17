@@ -134,11 +134,13 @@ def crop_and_save_rois(rgb, result, save_dir, filename, conf_threshold=0.5):
     boxes = result.boxes.xywh.cpu().numpy()
     scores = result.boxes.conf.cpu().numpy()
     classes = result.boxes.cls.cpu().numpy()
-    fail_count = 0
+    not_pass_confidence = 0
+    not_pass_ratio = 0
+    saved = 0
 
     for i, (box, score, class_id) in enumerate(zip(boxes, scores, classes)):
         if score < conf_threshold:
-            fail_count =1
+            not_pass_confidence += 1
             continue
 
         cx, cy, w, h = box
@@ -149,8 +151,13 @@ def crop_and_save_rois(rgb, result, save_dir, filename, conf_threshold=0.5):
 
         roi = rgb[y1:y2, x1:x2]
 
-        save_path = os.path.join(save_dir, f"{filename[:12]}_plate.jpg")
+        if w/h < 1 or w/h > 1.9:
+            not_pass_ratio += 1
+            continue
+
+        save_path = os.path.join(save_dir, f"{filename[:12]}_plate_{saved}.jpg")
         cv2.imwrite(save_path, cv2.cvtColor(roi, cv2.COLOR_RGB2BGR))
         print(f"Saved ROI to {save_path}")
+        saved += 1
 
-    return fail_count
+    return not_pass_confidence, not_pass_ratio

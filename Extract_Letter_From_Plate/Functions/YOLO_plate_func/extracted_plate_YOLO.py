@@ -16,7 +16,8 @@ class PlateExtractor:
         self.save_dir = save_dir
         self.debug_mode = debug_mode
         os.makedirs(save_dir, exist_ok=True)
-        self.fail_count = 0
+        self.fail_confidence = 0
+        self.fail_ratio = 0
         self.total_images = 0
 
     def process_images(self):
@@ -38,10 +39,11 @@ class PlateExtractor:
         result = self.model.predict(rgb_img)[0]
 
         # Crop & Save ROIs, passing filename for organized saving
-        fail_status = crop_and_save_rois(rgb_img, result, self.save_dir, filename)
+        not_pass_confidence, not_pass_ratio = crop_and_save_rois(rgb_img, result, self.save_dir, filename)
 
-        if fail_status:
-            self.fail_count += 1
+        if (not_pass_ratio + not_pass_confidence) >= 1:
+            self.fail_confidence += not_pass_confidence
+            self.fail_ratio += not_pass_ratio
 
         self.total_images += 1
 
@@ -50,7 +52,7 @@ class PlateExtractor:
         print("SUMMARY REPORT")
         print("=" * 50)
         print(f"Total Images Processed : {self.total_images}")
-        print(f"Failed Detections       : {self.fail_count}")
-        success = self.total_images - self.fail_count
-        print(f"Successful Detections   : {success}")
+        print(f"Failed Ratio      : {self.fail_ratio}")
+        print(f"Fail Confidence   : {self.fail_confidence}")
+        print("Note that fail confidence and fail ratio don't matter to the successful rate.")
         print("=" * 50 + "\n")
