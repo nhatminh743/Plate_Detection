@@ -1,6 +1,6 @@
 import os
 from ultralytics import YOLO
-from PIL import Image
+import cv2
 from typing import List
 
 def find_matching_plate_file(partial_name, directory):
@@ -40,13 +40,16 @@ class PlotImageS():
             for img_filename in os.listdir(self.image_dir):
                 img_path = os.path.join(self.image_dir, img_filename)
 
-                original_image = Image.open(img_path)
+                original_image = cv2.imread(img_path)
+                assert original_image is not None, f"Failed to load {img_path}"
+                h, w, channel = original_image.shape
 
-                new_size = (original_image.width * self.scale_factor, original_image.height * self.scale_factor)
-                resized_image = original_image.resize(new_size, Image.BICUBIC)
+                # Resize image
+                new_size = (w * self.scale_factor, h * self.scale_factor)
+                resized_image = cv2.resize(original_image, new_size, interpolation=cv2.INTER_LINEAR)
 
-                results = self.model.predict(source=resized_image, save=False, imgsz=new_size)[0]
-
+                results = self.model.predict(resized_image, imgsz=new_size, conf=0.25, iou=0.7, agnostic_nms = True)[0]
+                
                 img_with_boxes = results.plot(font_size= self.bounding_box_font_size, pil=True,
                                               line_width= self.bounding_box_bezel_size)
 
@@ -61,12 +64,15 @@ class PlotImageS():
                 img_filename = find_matching_plate_file(img_filename, self.image_dir)
                 img_path = os.path.join(self.image_dir, img_filename)
 
-                original_image = Image.open(img_path)
+                original_image = cv2.imread(img_path)
+                assert original_image is not None, f"Failed to load {img_path}"
+                h, w, channel = original_image.shape
 
-                new_size = (original_image.width * self.scale_factor, original_image.height * self.scale_factor)
-                resized_image = original_image.resize(new_size, Image.BICUBIC)
+                # Resize image
+                new_size = (w * self.scale_factor, h * self.scale_factor)
+                resized_image = cv2.resize(original_image, new_size, interpolation=cv2.INTER_LINEAR)
 
-                results = self.model.predict(source=resized_image, save=False, imgsz=new_size)[0]
+                results = self.model.predict(resized_image, imgsz=new_size, conf=0.25, iou=0.7, agnostic_nms = True)[0]
 
                 img_with_boxes = results.plot(font_size= 10, pil=True, line_width= 2)
 

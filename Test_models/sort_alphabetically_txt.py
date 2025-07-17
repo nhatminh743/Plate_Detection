@@ -25,4 +25,4 @@ def sort_txt_by_title(input_file, output_file=None):
 # sort_txt_by_title('/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_CNN/Final_Result/ocr_results.txt')
 # sort_txt_by_title('/home/minhpn/Desktop/Green_Parking/Test_models/OpenCV_EasyOCR/Final_Result/ocr_results.txt')
 # sort_txt_by_title('/home/minhpn/Desktop/Green_Parking/Test_models/OpenCV_CNN/Final_Result/ocr_results.txt')
-sort_txt_by_title('/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_YOLO/Final_Result/ocr_results.txt')
+# sort_txt_by_title('/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_YOLO/Final_Result/ocr_results.txt')

@@ -11,5 +11,4 @@ validate_dir = '/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_YOLO/Final_R
 list_of_mismatch = compare_txt_files(test_dir, validate_dir, long_report=True, saved=True)
 plot_image_func = PlotImageS(model_dir, image_dir, output_dir, list_of_selection=list_of_mismatch, plot_selection=True)
 
-
 plot_image_func.plot_all()
