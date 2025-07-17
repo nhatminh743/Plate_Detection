@@ -1,26 +1,6 @@
-#######################      IMPORT LIBRARIES     ################################
-
-
-from fastapi import FastAPI, UploadFile, File
-from typing import List
-import os
-from datetime import datetime
-import uuid
-from pathlib import Path
-from datetime import datetime
-from fastapi.staticfiles import StaticFiles
-from Extract_Letter_From_Plate.Functions.utils import clear_directory
-from Extract_Letter_From_Plate.Functions.YOLO_plate_func import extracted_plate_YOLO
-from Extract_Letter_From_Plate.Functions.YOLO_read_func import letter_YOLO
-from Test_models.sort_alphabetically_txt import sort_txt_by_title
-import sys
-########################        DECLARE APP        ##################################
-app = FastAPI()
-
-#########################            END            #################################
-
 #########################       DECLARE PATHS       #################################
-
+import sys
+from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 PARENT_DIR = BASE_DIR.parent
 sys.path.append(str(PARENT_DIR))
@@ -32,6 +12,26 @@ YOLO_plate_model = BASE_DIR / "Model_training/YOLOv11_training/runs/detect/train
 YOLO_read_model = BASE_DIR / "Model_training/YOLOv11_Detect_Number_From_Plate/runs/content/runs/detect/train2/weights/best.pt"
 
 #########################    END OF DECLARE PATHS   #################################
+#######################      IMPORT LIBRARIES     ################################
+
+from fastapi import FastAPI, UploadFile, File
+from typing import List
+import os
+from datetime import datetime
+import uuid
+
+from datetime import datetime
+from fastapi.staticfiles import StaticFiles
+from Extract_Letter_From_Plate.Functions.utils import clear_directory
+from Extract_Letter_From_Plate.Functions.YOLO_plate_func import extracted_plate_YOLO
+from Extract_Letter_From_Plate.Functions.YOLO_read_func import letter_YOLO
+from Test_models.sort_alphabetically_txt import sort_txt_by_title
+
+
+########################        DECLARE APP        ##################################
+app = FastAPI()
+
+#########################            END            #################################
 #########################     CREATE DIR IF NOT     #################################
 
 for d in [UPLOAD_DIR, PLATE_DIR, RESULT_DIR]:
