@@ -2,10 +2,7 @@ import os
 from ultralytics import YOLO
 from ultralytics.utils.ops import non_max_suppression, scale_boxes
 import cv2
-import torch
 from ultralytics.data.augment import LetterBox
-import numpy as np
-
 
 
 class LetterExtractor:

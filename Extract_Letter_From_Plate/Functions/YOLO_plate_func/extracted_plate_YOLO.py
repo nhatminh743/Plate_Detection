@@ -1,6 +1,4 @@
 import os
-import numpy as np
-from Extract_Letter_From_Plate.Functions import extract_plate_function
 import sys
 import cv2
 sys.path.append('/Extract_Letter_From_Plate/Full_pipeline_YOLO_EasyOCR')

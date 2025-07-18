@@ -8,19 +8,15 @@ STATIC_DIR = BASE_DIR / "static"
 UPLOAD_DIR = STATIC_DIR / "saved_uploads"
 PLATE_DIR = STATIC_DIR / "extracted_plates"
 RESULT_DIR = STATIC_DIR / "final_results"
-YOLO_plate_model = BASE_DIR / "Model_training/YOLOv11_training/runs/detect/train3/weights/best.pt"
-YOLO_read_model = BASE_DIR / "Model_training/YOLOv11_Detect_Number_From_Plate/runs/content/runs/detect/train2/weights/best.pt"
-
+YOLO_plate_model = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_training/runs/detect/train3/weights/best.pt'
+YOLO_read_model = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_Detect_Number_From_Plate/runs/content/runs/detect/train2/weights/best.pt'
 #########################    END OF DECLARE PATHS   #################################
 #######################      IMPORT LIBRARIES     ################################
 
 from fastapi import FastAPI, UploadFile, File
 from typing import List
+from datetime import datetime
 import os
-from datetime import datetime
-import uuid
-
-from datetime import datetime
 from fastapi.staticfiles import StaticFiles
 from Extract_Letter_From_Plate.Functions.utils import clear_directory
 from Extract_Letter_From_Plate.Functions.YOLO_plate_func import extracted_plate_YOLO
@@ -42,27 +38,26 @@ for d in [UPLOAD_DIR, PLATE_DIR, RESULT_DIR]:
 ##########################     ALLOW USER TO ACCESS     #############################
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
+
+###########################       FUNCTIONS         ##################################
+
 def create_unique_folder(filename, base_dir=UPLOAD_DIR):
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    unique_id = uuid.uuid4().hex[:6]
-    folder_path = os.path.join(base_dir, f"{filename}_{timestamp}_{unique_id}")
+    now = datetime.now()
+    time_now = now.strftime('%Y-%m-%d_%H-%M-%S')
+    folder_path = os.path.join(base_dir, f"{filename}_{time_now}")
     os.makedirs(folder_path, exist_ok=True)
     return folder_path
 
 @app.post("/upload-file")
 async def upload_file(file: UploadFile = File(...)):
-    folder = create_unique_folder(file.filename)
+    pure_filename = extract_pure_name(file.filename)
+    folder = create_unique_folder(pure_filename)
     file_path = os.path.join(folder, file.filename)
     with open(file_path, "wb") as f:
         f.write(await file.read())
-    return {"message": f"Upload file successfully, located at: {folder}"}
+    print(f"Upload file successfully, located at: {folder}")
 
-@app.post('process')
-async def process(session_folder):
-    session_path = STATIC_DIR / session_folder
-
-    if not(session_path.exists()):
-        return {'error': 'Session folder does not exist'}
+    session_path = folder
 
     clear_directory(str(PLATE_DIR))
     clear_directory(str(RESULT_DIR))
@@ -101,10 +96,22 @@ async def process(session_folder):
                     plate_path = PLATE_DIR / f"{img_name.strip()[:12]}.jpg"
                     results[img_name.strip()[:12]] = {
                         "text": ocr_text.strip(),
-                        "image_url": f"/static/extracted_plates/{plate_path.name}" if plate_path.exists() else None
+                        "image_name": f"{img_name}"
                     }
 
     return {"results": results}
 
+################################### END OF MAIN FUNCTION #####################################################
+##########################################      UTILS     ####################################################
 
+def extract_pure_name(filename):
+    if filename.endswith(('.jpg', '.png', '.jpeg')):
+        if filename.endswith('.png') or filename.endswith('.jpg'):
+            return filename[:-4]
+        elif filename.endswith('.jpeg'):
+            return filename[:-5]
+    elif filename.endswith('.zip'):
+        pass
+    else:
+        return {'error': 'Only accept file type of .jpg, .png, .jpeg or .zip'}
 

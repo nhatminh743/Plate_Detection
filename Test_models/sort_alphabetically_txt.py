@@ -11,8 +11,6 @@ def sort_txt_by_title(input_file, output_file=None):
 
     # Sort lines by title before ':'
     sorted_lines = sorted(lines, key=lambda x: x.split(':')[0].strip())
-    for i in range(10):
-        print(sorted_lines[i])
 
     # Write result
     output_path = output_file if output_file else input_file
