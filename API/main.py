@@ -95,8 +95,7 @@ async def upload_file(file: UploadFile = File(...)):
                     img_name, ocr_text = line.strip().split(':', 1)
                     plate_path = PLATE_DIR / f"{img_name.strip()[:12]}.jpg"
                     results[img_name.strip()[:12]] = {
-                        "text": ocr_text.strip(),
-                        "image_name": f"{img_name}"
+                        "text": ocr_text.strip()
                     }
 
     return {"results": results}
