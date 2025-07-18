@@ -62,8 +62,8 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 ###########################       FUNCTIONS         ##################################
 
-@app.post('/upload-files')
-async def upload_files(files: List[UploadFile] = File(...)):
+@app.post('/upload-files-multiple')
+async def upload_files_multiple(files: List[UploadFile] = File(...)):
     pure_filename = extract_pure_name(files[0].filename)
     folder = create_unique_folder(pure_filename)
 
@@ -74,7 +74,30 @@ async def upload_files(files: List[UploadFile] = File(...)):
         file_path = os.path.join(folder, file.filename)
         with open(file_path, 'wb') as f:
             f.write(await file.read())
-        print(f'Saved: {file.filename}')
+            print(f'Saved: {file.filename}')
+
+    req = ProcessRequest(
+        session_path=folder,
+        CURR_PLATE_DIR=CURR_PLATE_DIR,
+        CURR_RESULT_DIR=CURR_RESULT_DIR
+    )
+
+    result = process_uploaded_folder(req)
+
+    return result
+
+@app.post('/upload-files-single')
+async def upload_files_single(file: UploadFile = File(...)):
+    pure_filename = extract_pure_name(file.filename)
+    folder = create_unique_folder(pure_filename)
+
+    CURR_PLATE_DIR = create_unique_folder(pure_filename, base_dir=PLATE_DIR)
+    CURR_RESULT_DIR = create_unique_folder(pure_filename, base_dir=RESULT_DIR)
+
+    file_path = os.path.join(folder, file.filename)
+    with open(file_path, 'wb') as f:
+        f.write(await file.read())
+    print(f'Saved: {file.filename}')
 
     req = ProcessRequest(
         session_path=folder,
