@@ -1,0 +1,7 @@
+#scroll-upload {
+    max-height: 180px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+}
