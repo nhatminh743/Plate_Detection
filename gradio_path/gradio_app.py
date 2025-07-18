@@ -2,7 +2,9 @@
 #-------------------------------------------- IMPORT LIBRARIES ---------------------------------------------------------
 import gradio as gr
 import requests
-import cv2
+from PIL import Image
+import io
+import base64
 
 #-------------------------------------------------  EXTERNAL LINKS  ----------------------------------------------------
 css_fileLink = r'/home/minhpn/Desktop/Green_Parking/gradio_path/styles.css'
@@ -10,20 +12,24 @@ css_fileLink = r'/home/minhpn/Desktop/Green_Parking/gradio_path/styles.css'
 def upload_and_return_prediction_filepath(file_paths):
     url = "http://127.0.0.1:8000/upload-files-multiple"
 
-    files = [("files", (file_path.split("/")[-1], open(file_path, "rb"), "image/jpeg")) for file_path in file_paths]
+    files = [
+        ("files", (file_path.split("/")[-1], open(file_path, "rb"), "image/jpeg"))
+        for file_path in file_paths
+    ]
 
     try:
         response = requests.post(url, files=files)
         response.raise_for_status()
-        data = response.json()
+        data = response.json()  # This is a list
 
-        if "results" in data:
-            result_lines = []
-            for filename, info in data["results"].items():
-                result_lines.append(f"{filename}: {info['text']}")
-            return "\n".join(result_lines)
-        else:
-            return "❌ No results found."
+        text_data = data[0]  # The first item is the text dictionary
+
+        result_lines = []
+        for filename, info in text_data.items():
+            text = info.get("text", "No text detected")
+            result_lines.append(f"{filename}: {text}")
+
+        return "\n".join(result_lines)
 
     except Exception as e:
         return f"❌ Error: {str(e)}"
@@ -32,19 +38,33 @@ def upload_and_return_prediction_image(file_path):
     url = "http://127.0.0.1:8000/upload-files-single"
 
     try:
-        files = [
-            ("file", (file_path.split('/')[-1], open(file_path, 'rb'), "image/jpeg"))
-        ]
+        with open(file_path, 'rb') as f:
+            files = {
+                "file": (file_path.split("/")[-1], f, "image/jpeg")
+            }
 
-        response = requests.post(url, files=files)
-        response.raise_for_status()
+            response = requests.post(url, files=files)
+            response.raise_for_status()
         data = response.json()
 
-        if "results" in data:
-            for filename, info in data['results'].items():
-                return f"{info['text']}"
-        else:
-            return "❌ No results found."
+
+        results = data.get("text", "No text detected.")
+        dimension = data.get("dimension_of_plate", [])
+        image_base64 = data.get("image", "")
+
+        if not image_base64:
+            return results, dimension, None
+
+        #
+        image_data = image_base64.split(",")[1]
+        image = Image.open(io.BytesIO(base64.b64decode(image_data)))
+
+        if 'text' in data:
+            result_lines = []
+            for filename, info in data["text"].items():
+                result_lines.append(f"{info['text']}")
+
+        return result_lines[0], image
 
     except Exception as e:
         return f"❌ Error: {str(e)}"
@@ -75,12 +95,15 @@ io2 = gr.Interface(
     ),
     outputs = [
         gr.Textbox(
-        label="Detected Text",
-    )
+            label= "Detected Text" ,
+    ),
+        gr.Image(
+            type = 'pil',
+            label = 'Detected Images'
+        )
     ],
     title="License Plate Recognition"
 )
-
 
 demo = gr.TabbedInterface(
     [io1, io2], ['Mass file prediction', 'Single plate detection']

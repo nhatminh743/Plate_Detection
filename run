@@ -1,0 +1,9 @@
+conda activate fastAPIENV
+
+cd /home/minhpn/Desktop/Green_Parking/API
+
+cd /home/minhpn/Desktop/Green_Parking/gradio_path
+
+uvicorn main:app --reload --port 8000
+
+gradio gradio_app.py
