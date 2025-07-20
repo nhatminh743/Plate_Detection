@@ -15,6 +15,39 @@ This project focuses on detecting license plates from vehicle images and extract
 | Model_training/                | Stores model training scripts, weights, and configuration files.           |
 | Test_models/                   | Scripts and data to benchmark model accuracy on 100 test images.           |
 
+## How to run the project
+
+### For deployment
+
+1. Enter the `Extract_Letter_From_Plate/Functions/__init__.py` path and comment this part:
+- 'from .read_plate import PlateOCRProcessor'
+-  'PlateOCRProcessor' under `__all__`
+
+2. Create a new virtual environment and install necessary packages
+- Download Anaconda Navigator
+- Open Anaconda Prompt (prefer as Administrator)
+- Create a new environment using this line: `conda create -n deploymentENV python=3.10`
+- Activate your environment: `conda activate deploymentENV`
+- Change directory to your own local path for the Plate_Detection, for example mine is `C:\Users\ACER\Documents\nhatminh743\Plate_Detection` using this line:
+`cd <your-path>`
+- Install the requirements package using: `pip install -r requirements.txt`
+
+3. Run backend
+- Open new Anaconda Prompt
+- Activate environment: `conda activate deploymentENV`
+- Change directory to API folder: E.g. `cd C:\Users\ACER\Documents\nhatminh743\Plate_Detection\API`
+- Run backend: `uvicorn main:app --reload --port 8000`
+- Check if backend run: http://127.0.0.1:8000/docs
+
+4. Run frontend
+- Open new Anaconda Prompt
+- Activate environment: `conda activate deploymentENV`
+- Change directory to gradio_path folder: E.g. `cd C:\Users\ACER\Documents\nhatminh743\Plate_Detection\gradio_path`
+- Run frontend: `gradio gradio_app.py`
+- Check if frontend run: http://127.0.0.1:7860/
+
+That's it.
+
 ## How the Project Works
 
 ### General Approach
