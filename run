@@ -1,8 +1,14 @@
 conda activate fastAPIENV
 
+conda activate runENV
+
 cd /home/minhpn/Desktop/Green_Parking/API
 
+cd C:\Users\ACER\Documents\nhatminh743\Plate_Detection\API
+
 cd /home/minhpn/Desktop/Green_Parking/gradio_path
+
+cd C:\Users\ACER\Documents\nhatminh743\Plate_Detection\gradio_path
 
 uvicorn main:app --reload --port 8000
 
