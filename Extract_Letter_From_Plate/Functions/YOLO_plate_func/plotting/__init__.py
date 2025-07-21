@@ -1,8 +1,10 @@
+from imutils import contours
 from matplotlib import pyplot as plt
 from matplotlib.patches import Rectangle
 import os
 import cv2
-import numpy as np
+import imutils
+import math
 
 def convert_to_pixel_coords(box, img_width, img_height):
     """
@@ -131,33 +133,110 @@ def crop_and_save_rois(rgb, result, save_dir, filename, conf_threshold=0.5):
     os.makedirs(save_dir, exist_ok=True)
     height, width, _ = rgb.shape
 
-    boxes = result.boxes.xywh.cpu().numpy()
-    scores = result.boxes.conf.cpu().numpy()
-    classes = result.boxes.cls.cpu().numpy()
+    # boxes = result.boxes.xywh.cpu().numpy()
+    # scores = result.boxes.conf.cpu().numpy()
+    # classes = result.boxes.cls.cpu().numpy()
+
+    boxes = result.boxes
     not_pass_confidence = 0
-    not_pass_ratio = 0
     saved = 0
 
-    for i, (box, score, class_id) in enumerate(zip(boxes, scores, classes)):
-        if score < conf_threshold:
+    # for i, (box, score, class_id) in enumerate(zip(boxes, scores, classes)):
+    #     if score < conf_threshold:
+    #         not_pass_confidence += 1
+    #         continue
+    #
+    #     cx, cy, w, h = box
+    #     x1 = int(max(cx - w / 2, 0))
+    #     y1 = int(max(cy - h / 2, 0))
+    #     x2 = int(min(cx + w / 2, width))
+    #     y2 = int(min(cy + h / 2, height))
+    #
+    #     roi = rgb[y1:y2, x1:x2]
+    #
+    #     save_path = os.path.join(save_dir, f"{filename[:12]}_plate_{saved}.jpg")
+    #     cv2.imwrite(save_path, cv2.cvtColor(roi, cv2.COLOR_RGB2BGR))
+    #     print(f"Saved ROI to {save_path}")
+    #     saved += 1
+
+    for box in boxes:
+        x1, y1, x2, y2 = box.xyxy[0].tolist()
+        x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
+        confidence = box.conf[0].item()
+
+        if confidence < conf_threshold:
             not_pass_confidence += 1
             continue
 
-        cx, cy, w, h = box
-        x1 = int(max(cx - w / 2, 0))
-        y1 = int(max(cy - h / 2, 0))
-        x2 = int(min(cx + w / 2, width))
-        y2 = int(min(cy + h / 2, height))
-
         roi = rgb[y1:y2, x1:x2]
 
-        if w/h < 1 or w/h > 1.9:
-            not_pass_ratio += 1
-            continue
+        if filename.endswith('.jpg') or filename.endswith('.png'):
+            filename = filename[:-4]
+        elif filename.endswith('.jpeg'):
+            filename = filename[:-5]
 
-        save_path = os.path.join(save_dir, f"{filename[:12]}_plate_{saved}.jpg")
+        save_path = os.path.join(save_dir, f"{filename}_plate_{saved}.jpg")
+
         cv2.imwrite(save_path, cv2.cvtColor(roi, cv2.COLOR_RGB2BGR))
         print(f"Saved ROI to {save_path}")
         saved += 1
 
-    return not_pass_confidence, not_pass_ratio
+    return not_pass_confidence
+
+# def postprocess(image, imshow_mode = False):
+#     original_image = image.copy()
+#     original_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB)
+#     # Resize
+#     image = imutils.resize(image, width=300)
+#     if imshow_mode:
+#         cv2.imshow("original image", image)
+#
+#     # Gray image
+#     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+#     if imshow_mode:
+#         cv2.imshow("gray image", gray_image)
+#
+#     # Smoothing
+#     bilateral_image = cv2.bilateralFilter(gray_image, 11, 17, 17)
+#     if imshow_mode:
+#         cv2.imshow("smoothened image", bilateral_image)
+#
+#     # # Otsu's thresholding
+#     # ret, thresh = cv2.threshold(bilateral_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+#     # if imshow_mode:
+#     #     cv2.imshow("thresh image", thresh)
+#     #
+#     # # Morph
+#     # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+#     # morph_image = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+#     # if imshow_mode:
+#     #     cv2.imshow("morphed image", morph_image)
+#
+#     #Canny
+#     morph_image = cv2.Canny(bilateral_image, 30, 200)
+#
+#     # Find contours
+#     cnts, new = cv2.findContours(morph_image.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+#
+#     largest_cnts = cnts[0]
+#
+#     copy_image = image.copy()
+#
+#     if imshow_mode:
+#         cv2.imshow("largest cnt", cv2.drawContours(copy_image, cnts, -1, (0, 255, 0), 2))
+#
+#     (x1, y1) = largest_cnts[0, 0]
+#     (x2, y2) = largest_cnts[1, 0]
+#     (x3, y3) = largest_cnts[2, 0]
+#     (x4, y4) = largest_cnts[3, 0]
+#     array = [[x1, y1], [x2, y2], [x3, y3], [x4, y4]]
+#     sorted_array = array.sort(reverse=True, key=lambda x: x[1])
+#     (x1, y1) = array[0]
+#     (x2, y2) = array[1]
+#     doi = abs(y1 - y2)
+#     ke = abs(x1 - x2)
+#     angle = math.atan(doi / ke) * (180.0 / math.pi)
+#
+#     cv2.waitKey(0)
+#     cv2.destroyAllWindows()
+

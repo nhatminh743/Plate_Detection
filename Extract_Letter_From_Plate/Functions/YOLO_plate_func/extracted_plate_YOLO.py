@@ -1,8 +1,7 @@
 import os
 import sys
 import cv2
-sys.path.append('/Extract_Letter_From_Plate/Full_pipeline_YOLO_EasyOCR')
-from Extract_Letter_From_Plate.Functions.YOLO_plate_func.plotting import plot_result, crop_and_save_rois
+from Extract_Letter_From_Plate.Functions.YOLO_plate_func.plotting import crop_and_save_rois
 from ultralytics import YOLO
 
 
@@ -17,7 +16,7 @@ class PlateExtractor:
 
         self.fail_confidence = 0
         self.fail_ratio = 0
-        self.fail_count = 0  # ✅ Add this
+        self.fail_count = 0
         self.total_images = 0
         self.all_image_dimension = []
         self.org_dim = []
@@ -68,11 +67,7 @@ class PlateExtractor:
         dimension = [x1, y1, x2, y2]
 
         # Save cropped region & calculate failure score
-        not_pass_confidence, not_pass_ratio = crop_and_save_rois(rgb_img, result, self.save_dir, filename)
-
-        if (not_pass_ratio + not_pass_confidence) >= 1:
-            self.fail_confidence += not_pass_confidence
-            self.fail_ratio += not_pass_ratio
+        not_pass_confidence = crop_and_save_rois(rgb_img, result, self.save_dir, filename)
 
         self.total_images += 1
 
@@ -84,6 +79,13 @@ class PlateExtractor:
         print("=" * 50)
         print(f"Total Images Processed   : {self.total_images}")
         print(f"Images Failed to Load    : {self.fail_count}")
-        print(f"Failed Ratio (Total)     : {self.fail_ratio}")
-        print(f"Fail Confidence (Total)  : {self.fail_confidence}")
         print("=" * 50 + "\n")
+
+
+new = PlateExtractor(
+    data_dir=r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLO_to_labelme_func/validation/images',
+    save_dir=r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLO_to_labelme_func/validation/process',
+    best_model_file= r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_training/runs/detect/train2/weights/best.pt'
+)
+
+new.process_images()

@@ -14,8 +14,8 @@ PLOT_DIR = STATIC_DIR / "plotted_images"
 '''
 BIG NOTE: LINUX dir
 '''
-# YOLO_plate_model = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_training/runs/detect/train3/weights/best.pt'
-# YOLO_read_model = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_Detect_Number_From_Plate/runs/content/runs/detect/train2/weights/best.pt'
+YOLO_plate_model = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_training/runs/detect/train2/weights/best.pt'
+YOLO_read_model = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_Detect_Number_From_Plate/runs/content/runs/detect/train2/weights/best.pt'
 
 '''
 BIGNOTE: WINDOW DIR
@@ -23,8 +23,8 @@ BIGNOTE: WINDOW DIR
 USER: REPLACE YOUR CURRENT DIRECTORY IN ORDER FOR THIS TO RUN.
 '''
 
-YOLO_plate_model = r'C:\Users\ACER\Documents\nhatminh743\Plate_Detection\Model_training\YOLOv11_training\runs\detect\train3\weights\best.pt'
-YOLO_read_model = r'C:\Users\ACER\Documents\nhatminh743\Plate_Detection\Model_training\YOLOv11_Detect_Number_From_Plate\runs\content\runs\detect\train2\weights\best.pt'
+# YOLO_plate_model = r'C:\Users\ACER\Documents\nhatminh743\Plate_Detection\Model_training\YOLOv11_training\runs\detect\train3\weights\best.pt'
+# YOLO_read_model = r'C:\Users\ACER\Documents\nhatminh743\Plate_Detection\Model_training\YOLOv11_Detect_Number_From_Plate\runs\content\runs\detect\train2\weights\best.pt'
 
 
 #########################    END OF DECLARE PATHS   #################################
@@ -61,7 +61,7 @@ def extract_pure_name(filename):
             return filename[:-5]
     # elif filename.endswith('.zip'):
     else:
-        return {'error': 'Only accept file type of .jpg, .png, .jpeg or .zip'}
+        return {'error': 'Only accept file type of .jpg, .png, .jpeg'}
 
 def create_unique_folder(filename, base_dir=UPLOAD_DIR):
     now = datetime.now()
@@ -126,7 +126,6 @@ async def upload_files_single(file: UploadFile = File(...)):
         CURR_PLATE_DIR=CURR_PLATE_DIR,
         CURR_RESULT_DIR=CURR_RESULT_DIR,
     )
-
 
     image = Image.open(io.BytesIO(contents))
 

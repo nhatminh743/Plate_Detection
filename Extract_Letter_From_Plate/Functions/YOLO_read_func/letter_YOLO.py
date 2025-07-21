@@ -1,8 +1,11 @@
 import os
+import numpy as np
 from ultralytics import YOLO
 from ultralytics.utils.ops import non_max_suppression, scale_boxes
 import cv2
 from ultralytics.data.augment import LetterBox
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
 
 
 class LetterExtractor:
@@ -25,6 +28,7 @@ class LetterExtractor:
     def _process_single_image(self, filename):
         filepath = os.path.join(self.data_dir, filename)
         detections = []
+        data_for_kMeans = []
 
         # Load image
         original_image = cv2.imread(filepath)
@@ -57,23 +61,52 @@ class LetterExtractor:
             # Compute center for sorting
             x_center = x
             y_center = y
-            detections.append((x_center, y_center, class_name))
+            detections.append([x_center, y_center, class_name])
+            data_for_kMeans.append(y_center)
+
+        data_for_kMeans = np.array(data_for_kMeans).reshape(-1, 1)
+
+        kmeans = KMeans(n_clusters=2, random_state=42).fit(data_for_kMeans)
+        labels = kmeans.predict(data_for_kMeans)
+
+        row_ranges = []
+        for label in np.unique(labels):
+            cluster_points = data_for_kMeans[labels == label]
+            row_range = cluster_points.max() - cluster_points.min()
+            row_ranges.append(row_range)
+
+        # Define a threshold: if the rows are too close, consider it 1 row
+        vertical_distance = np.abs(kmeans.cluster_centers_[0] - kmeans.cluster_centers_[1])
+        if vertical_distance > 40:  # 40 pixels is an example threshold
+            print("🔢 Two rows detected")
+        else:
+            print("🔢 One row detected")
+
+        # Optional: visualize for debugging
+        plt.scatter([row[0] for row in detections], [row[1] for row in detections], c=labels, cmap='viridis')
+        plt.gca().invert_yaxis()  # Invert Y for image coordinate compatibility
+        plt.title("Clustering Boxes into Rows")
+        plt.xlabel("Center X")
+        plt.ylabel("Center Y")
+        plt.show()
 
         # Organize characters into 2 lines based on y-median
-        y_values = [d[1] for d in detections]
-        sum_y = sum(y_values)
-        y_mean = sum_y / len(y_values)
-        line1 = [det for det in detections if det[1] < y_mean]
-        line2 = [det for det in detections if det[1] >= y_mean]
+        # y_values = [d[1] for d in detections]
+        # sum_y = sum(y_values)
+        # y_mean = sum_y / len(y_values)
+        # line1 = [det for det in detections if det[1] < y_mean]
+        # line2 = [det for det in detections if det[1] >= y_mean]
+        #
+        # # Sort characters left to right
+        # line1 = sorted(line1, key=lambda x: x[0])
+        # line2 = sorted(line2, key=lambda x: x[0])
+        # final_characters = [char for _, _, char in line1 + line2]
+        # predicted_text = ''.join(final_characters)
+        #
+        # # Format plate: XX-YY ZZZZ (or whatever format you want)
+        # predicted_text_process = predicted_text[:2] + '-' + predicted_text[2:4] + ' ' + predicted_text[4:]
 
-        # Sort characters left to right
-        line1 = sorted(line1, key=lambda x: x[0])
-        line2 = sorted(line2, key=lambda x: x[0])
-        final_characters = [char for _, _, char in line1 + line2]
-        predicted_text = ''.join(final_characters)
-
-        # Format plate: XX-YY ZZZZ (or whatever format you want)
-        predicted_text_process = predicted_text[:2] + '-' + predicted_text[2:4] + ' ' + predicted_text[4:]
+        print(detections)
 
         # Debug print
         if self.debug_mode:

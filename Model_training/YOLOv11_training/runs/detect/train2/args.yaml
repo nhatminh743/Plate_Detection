@@ -1,8 +1,8 @@
 task: detect
 mode: train
 model: yolo11m.pt
-data: data.yaml
-epochs: 300
+data: /content/drive/MyDrive/YOLOv11_PlateDetection/data.yaml
+epochs: 200
 time: null
 patience: 100
 batch: 16
@@ -102,4 +102,4 @@ auto_augment: randaugment
 erasing: 0.4
 cfg: null
 tracker: botsort.yaml
-save_dir: runs\detect\train2
+save_dir: runs/detect/train2

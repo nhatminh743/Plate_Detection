@@ -12,7 +12,7 @@ EXTRACTED_PLATE_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_CNN/
 LETTER_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_CNN/Extracted_Letter_Data'
 FINAL_RESULT_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_CNN/Final_Result'
 model_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/CNN_training/CNN_Model.keras'
-YOLO_model_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_training/runs/detect/train3/weights/best.pt'
+YOLO_model_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_training/runs/detect/train2/weights/best.pt'
 
 def main_pipeline():
     # Step 1: Plate Extraction

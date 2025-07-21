@@ -1,17 +1,26 @@
-import json
+model_path = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_training/runs/detect/train2/weights/best.pt'
 
-# Example JSON result (can also be loaded from a file or API response)
-data = {
-    "results": {
-        "0010_00004_b": {
-            "text": "59-F1 07509"
-        }
-    }
-}
+image_path = (r'/home/minhpn/Desktop/Green_Parking/Hung_0439_png.rf.f657486e2ef1dfed77c819713baed990.jpg'r'')
 
-# Extract the filename and text
-filename = list(data["results"].keys())[0]
-plate_text = data["results"][filename]["text"]
+import cv2
+from ultralytics import YOLO
 
-print(f"Filename: {filename}")
-print(f"Extracted Text: {plate_text}")
+model = YOLO(model_path)
+
+sample_img = cv2.imread(image_path)
+
+sample_img_rgb = cv2.cvtColor(sample_img, cv2.COLOR_BGR2RGB)
+
+result = model.predict(sample_img_rgb)[0]
+
+# Access detections
+boxes = result.boxes  # contains xyxy, confidence, class
+
+for box in boxes:
+    # xyxy is (x1, y1, x2, y2)
+    x1, y1, x2, y2 = box.xyxy[0].tolist()
+    confidence = box.conf[0].item()
+    cls = box.cls[0].item()
+
+    print(f"Plate at ({x1:.0f}, {y1:.0f}) to ({x2:.0f}, {y2:.0f}), Confidence: {confidence:.2f}, Class: {cls}")
+
