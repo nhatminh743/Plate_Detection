@@ -23,7 +23,10 @@ This project focuses on detecting license plates from vehicle images and extract
 - 'from .read_plate import PlateOCRProcessor'
 -  'PlateOCRProcessor' under `__all__`
 
-2. Create a new virtual environment and install necessary packages
+2. Change model directory:
+- Change the model directory in `API/main.py` to your local directory.
+
+3. Create a new virtual environment and install necessary packages
 - Download Anaconda Navigator
 - Open Anaconda Prompt (prefer as Administrator)
 - Create a new environment using this line: `conda create -n deploymentENV python=3.10`
@@ -32,14 +35,14 @@ This project focuses on detecting license plates from vehicle images and extract
 `cd <your-path>`
 - Install the requirements package using: `pip install -r requirements.txt`
 
-3. Run backend
+4. Run backend
 - Open new Anaconda Prompt
 - Activate environment: `conda activate deploymentENV`
 - Change directory to API folder: E.g. `cd C:\Users\ACER\Documents\nhatminh743\Plate_Detection\API`
 - Run backend: `uvicorn main:app --reload --port 8000`
 - Check if backend run: http://127.0.0.1:8000/docs
 
-4. Run frontend
+5. Run frontend
 - Open new Anaconda Prompt
 - Activate environment: `conda activate deploymentENV`
 - Change directory to gradio_path folder: E.g. `cd C:\Users\ACER\Documents\nhatminh743\Plate_Detection\gradio_path`
@@ -234,13 +237,15 @@ Ultimately, YOLOv11 proved to be the most robust and scalable solution, making i
 
 ### Connect Two Main Steps:
 
-I connect total of 5 pipeline to process the plate image:
+I connect total of 5 pipeline to process the plate image and test them on a test set:
 
-1. OpenCV - CNN
-2. OpenCV - EasyOCR
-3. YOLO - CNN
+1. OpenCV - CNN: 0%
+2. OpenCV - EasyOCR: 21%
+3. YOLO - CNN: 4%
 4. YOLO - EasyOCR: 36%
 5. YOLO - YOLO: 94%
+
+The test set contains harsher condition compare to overall train set.
 
 Based on the result on the test set, I decide to proceed with YOLO-YOLO.
 
