@@ -3,9 +3,9 @@ import json
 from PIL import Image
 
 # Define directories
-image_dir = r'/Model_training/YOLO_to_labelme_func/train/images'
-input_dir = r'/Model_training/YOLO_to_labelme_func/train/json_output'
-output_dir = r'/Model_training/YOLO_to_labelme_func/train/labels'
+image_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLO_to_labelme_func/train/process'
+input_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLO_to_labelme_func/train/json_output'
+output_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLO_to_labelme_func/train/labels'
 class_txt = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_Detect_Number_From_Plate/data/train/labels/classes.txt'
 
 # Load class labels from class_txt

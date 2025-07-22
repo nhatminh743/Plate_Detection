@@ -1,0 +1,172 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "6",
+      "points": [
+        [
+          15.737623762376241,
+          9.217271727172713
+        ],
+        [
+          28.608910891089113,
+          34.739823982398235
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "1",
+      "points": [
+        [
+          28.82893289328933,
+          8.777227722772274
+        ],
+        [
+          37.739823982398235,
+          33.969746974697465
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "D",
+      "points": [
+        [
+          44.23047304730474,
+          9.987348734873484
+        ],
+        [
+          55.34158415841584,
+          35.179867986798676
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "2",
+      "points": [
+        [
+          55.45159515951596,
+          10.757425742574254
+        ],
+        [
+          64.80253025302531,
+          36.940044004400434
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "2",
+      "points": [
+        [
+          6.606710671067109,
+          37.050055005500546
+        ],
+        [
+          18.157865786578657,
+          63.78272827282728
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "9",
+      "points": [
+        [
+          18.157865786578657,
+          39.47029702970296
+        ],
+        [
+          29.48899889988999,
+          63.34268426842684
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "7",
+      "points": [
+        [
+          30.809130913091312,
+          38.150165016501646
+        ],
+        [
+          41.7002200220022,
+          65.76292629262926
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "9",
+      "points": [
+        [
+          48.30088008800881,
+          39.47029702970297
+        ],
+        [
+          58.31188118811882,
+          64.88283828382839
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "3",
+      "points": [
+        [
+          60.73212321232124,
+          40.9004400440044
+        ],
+        [
+          69.0929592959296,
+          65.1028602860286
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "../process/Hung_0369_png.rf.759b8e14c8363ef3dd8f4798a68145cc_plate_0.jpg",
+  "imageData": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABJAE8DASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDzHwroUuv+JLaxjU/PySfTn/CvoW28DeGLWJIXWd5UADso4z+Rryv4X2bQ+PpUPWAuCfQY/wDr19EwoqwjCjPPUdqtsg45/BHh+TJhkmT6r/8AWrL1D4X6JeOSb917EYHX8q6rW5L2e+jstPMaALvclf8A61SedPZaNJPcW6G5QZBx1pNuwWR5NrHwru7V4/7MvvNiGcLijTfhXe3NlNLeXq20oHy7u/616poNzPe6Ubqdf3pY8egqeZI2DtImcKSBjgGs+XU6o4upFWTPA2+HOvT3QQMkkKMRlcDP61rwfBm/kCzNMgfspdf6mvSdLv7pZIvtkQWJ2IjI478dKtX+qCO9IW1kaCM/vJNxAx+daLTYwqVJVHeR5lL8I9SjQ7JI29vOT/GuN8T+EtW8M7ZLuAtATgSKwIH4ivpOPT7O4t45AsoRhnhz/jXn/wAY08jwkkSZ2ecuNxJPWq5myUc38LH+2+NtRutm0GMkD15Fe9IG2j1PH6V4v8JdNe01K6EqFJPKBwfr/wDWr2leVQ/UmlawjlNRkvf+EhlewOGSIeZn8a3bW4+36YJpUBKqd3OecVhz3sVnqGotO+3zF2oO54rVsR5HhtsLg7Cee9JhYr6Cyx6PcTOuU8xiAPwpHvY7zRryZYmjIUjmrOhKF0SMY+ViTz3puuYj0S5CKB8vQcd6A6GOiFbLRouoLc571e8SMDFDp0SgSXLhSB2FVleJ73SIUcMY1JIHbiptOxqfiC4v3/1cPyR5I6+tAkbcUIhgjiXHyKFryj43Sj+wreLOGaUfpXrbAcY/nXhvx4nZTY2+7A3Eg0IZ0/w81Eaxr+o3SptSNViXA9yf616XJeWsAVJ50R2HANeVfBmIiwvbn/npMB+grv8AWNOslt3vp490oG1Mnv2psDRn0uxvHWeWEOQAVOOKe4huIzEGRlxghT2rI1B3tPC6Rg7ZJMITj19Kp6TYJpmsQQRs5Dxl33HvSA6GMWtjAsBljjCj5VJqG8s49Ss2hEg8t8jcP8+1YfiLQraUTancSSFkQqqqfXpWxoVr9l0qCP5hnBINHQCtp/hqDTPMljkLTOmNznp9KpxeFLm2uRJFfMqb9zKGPeqmorc6lf304u2igshhVXua3LaW7n0aNo2H2l0wjH+dAjUEbKAGJO1cZNfP3x5mzq2nwDkqhY165pa6jpusR2l3dm4M0TNg9Bg/WvEPjJMJfGyx7shYhx6UIZ6V8HIiPDLODz5n9BXZaiw1DWYLBPmjhHmS49R0rlvhIoTwcmPvl24HtWpp1zqdhqU5bTmk8+Q5kB7flQFjY8RQSy6aqRLuaJxIAT1xWVoV1PqXiB5rmEwlI9qr/WtrVLq7trVXt7fzXPLJ6fpVPQorq4vJdSu4PIDLtEdCATxBI1xd2GnIeZH8yQDuorcA2EBcYAxjNYOnRy3viG61GRSqRL5UYP61qvfIlwYApZsZyBQCOTub0aeNStp4zuum+RgK6rTU8nT4BjOFGK57VdZiuGexazP2jfhWK1t3GoR6RYxyTLkBQCV5xQwsZenPPe+Jbu6uU2GGPbCv+znmvAfixKH8fzjP3VxX0FpV3HqmsXt7bg+QIginHfNfOfxMcSfEG+yfu8UwRs+DPHt94ehFpEiyLK25Se1emy/FR9Ojj+02iOXGfkrwjR/9ZD/umug13/j0tv8Ae/pSGent8bLRPv6YQfbP+FSD436Uy82Mhx2Ab/CvHpvuLWf/AMtR9KAPeYfjFoRXBs5E79D/AIVJH8W/DZYu8TKx43YP+FeFx/6pqqn+H60CPouP4oeEpJAxlVST19/yq2PH3hS6HlyX8ZB67mJFfMkn3zUR6fjQM+mb/wCInhTStPlMN7BuVSVSM/ePavmLW9VOta7d6jIu1p3LY9KoXXX/AIHUY/1rfWgLH//Z",
+  "imageHeight": 73,
+  "imageWidth": 79
+}
