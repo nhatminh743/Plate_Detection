@@ -4,8 +4,9 @@ import numpy as np
 from paddleocr import TextDetection, TextRecognition
 
 class PaddleOCRLineExtractor:
-    def __init__(self, data_dir, save_dir):
+    def __init__(self, data_dir, temporary_dir, save_dir):
         self.data_dir = data_dir
+        self.temporary_dir = temporary_dir
         self.save_dir = save_dir
         self.text_detector = TextDetection(model_name="PP-OCRv5_server_det")
         self.text_recognizer = TextRecognition()
@@ -31,9 +32,9 @@ class PaddleOCRLineExtractor:
                     continue
 
                 roi_bgr = cv2.cvtColor(roi, cv2.COLOR_RGB2BGR)
-                save_path = os.path.join(self.save_dir, f"roi_{i}.jpg")
-                cv2.imwrite(save_path, roi_bgr)
-                print(f"Saved ROI to {save_path}")
+                temporary_path = os.path.join(self.temporary_dir, f"roi_{i}.jpg")
+                cv2.imwrite(temporary_path, roi_bgr)
+                print(f"Saved ROI to {temporary_path}")
 
     def recognize_text_from_lines(self):
         all_texts = []
@@ -49,8 +50,10 @@ class PaddleOCRLineExtractor:
 
     def run(self):
         print("Detecting and cropping lines...")
-        self.detect_and_crop_lines()
+        for filepath in sorted(os.listdir(self.data_dir)):
+            self.detect_and_crop_lines()
         print("Recognizing text from cropped lines...")
+        for filepath in sorted(os.listdir(self.data_dir)):
         self.recognize_text_from_lines()
 
 new = PaddleOCRLineExtractor(data_dir = "/home/minhpn/Desktop/Green_Parking/one_image/Extracted_Plate_Data/bien-so-xe-phong-thuy-6_plate_0.jpg"
