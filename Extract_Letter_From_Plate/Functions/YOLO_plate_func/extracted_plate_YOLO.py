@@ -24,7 +24,7 @@ class PlateExtractor:
 
     def process_images(self):
         for filename in os.listdir(self.data_dir):
-            if filename.lower().endswith('.jpg'):
+            if filename.lower().endswith('.jpg') or filename.lower().endswith('.png') or filename.lower().endswith('.jpeg'):
                 dimension, org_dim, model_dim = self._process_single_image(filename)
                 if dimension:
                     self.all_image_dimension.append(dimension)
@@ -66,6 +66,7 @@ class PlateExtractor:
 
         dimension = [x1, y1, x2, y2]
 
+
         # Save cropped region & calculate failure score
         not_pass_confidence = crop_and_save_rois(rgb_img, result, self.save_dir, filename)
 
@@ -80,12 +81,3 @@ class PlateExtractor:
         print(f"Total Images Processed   : {self.total_images}")
         print(f"Images Failed to Load    : {self.fail_count}")
         print("=" * 50 + "\n")
-
-
-new = PlateExtractor(
-    data_dir=r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLO_to_labelme_func/validation/images',
-    save_dir=r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLO_to_labelme_func/validation/process',
-    best_model_file= r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_training/runs/detect/train2/weights/best.pt'
-)
-
-new.process_images()

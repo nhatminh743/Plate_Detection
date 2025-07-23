@@ -1,4 +1,4 @@
-model_path = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_training/runs/detect/train2/weights/best.pt'
+model_path = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_Detect_Number_From_Plate/runs/detect/train5/weights/best.pt'
 
 image_path = (r'/home/minhpn/Desktop/Green_Parking/Hung_0439_png.rf.f657486e2ef1dfed77c819713baed990.jpg'r'')
 
