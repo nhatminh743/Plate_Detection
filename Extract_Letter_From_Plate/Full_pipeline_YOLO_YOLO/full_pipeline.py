@@ -3,9 +3,9 @@ from Extract_Letter_From_Plate.Functions.YOLO_read_func import letter_YOLO
 from Test_models.sort_alphabetically_txt import sort_txt_by_title
 from Extract_Letter_From_Plate.Functions.utils import clear_directory
 
-RAW_DATA_DIR = r'/home/minhpn/Desktop/Green_Parking/one_image/saved'
-EXTRACTED_PLATE_DIR = r'/home/minhpn/Desktop/Green_Parking/one_image/Extracted_Plate_Data'
-FINAL_RESULT_DIR = r'/home/minhpn/Desktop/Green_Parking/one_image/Final_Result'
+RAW_DATA_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/Data'
+EXTRACTED_PLATE_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_YOLO/Extracted_Plate_Data'
+FINAL_RESULT_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_YOLO/Final_Result'
 YOLO_read_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_Detect_Number_From_Plate/runs/detect/train5/weights/best.pt'
 YOLO_plate_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_training/runs/detect/train2/weights/best.pt'
 
@@ -29,14 +29,12 @@ def main_pipeline():
         data_dir = EXTRACTED_PLATE_DIR,
         save_dir = FINAL_RESULT_DIR,
         best_model_file = YOLO_read_dir,
-        debug_mode=True,
+        debug_mode=False,
     )
     read.process_images()
 
-    #Step 3: Sort by alphabetically
-
 def sort():
-    # sort_txt_by_title('/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_YOLO/Final_Result/ocr_results.txt')
+    sort_txt_by_title('/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_YOLO/Final_Result/ocr_results.txt')
     pass
 
 if __name__ == '__main__':

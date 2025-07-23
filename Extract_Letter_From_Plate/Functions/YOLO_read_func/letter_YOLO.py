@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 from collections import defaultdict
 from sklearn.metrics import silhouette_score
 from Extract_Letter_From_Plate.Functions.YOLO_read_func.show_result import PlotImageS
-from paddleocr import TextRecognition
 from scipy.spatial import Voronoi, voronoi_plot_2d
 
 
@@ -25,12 +24,18 @@ class LetterExtractor:
         self.names = self.model.model.names
         self.scale_factor = 6
         self.two_row=True
-        self.paddleOCRmodel = TextRecognition()
 
     def process_images(self):
+        output_path = os.path.join(self.save_dir, 'ocr_results.txt')
+
         for filename in os.listdir(self.data_dir):
             if filename.lower().endswith('.jpg'):
-                self._process_single_image(filename)
+                final = self._process_single_image(filename)
+                with open(output_path, 'a') as f:
+                    cut_index = filename.index("_plate_")
+                    clean_name = filename[:cut_index]
+                    f.write(f'{clean_name}: {final}\n')
+                    print(f"Finished processing {clean_name}")
         print("Successfully processed images")
 
     def _process_single_image(self, filename):
@@ -84,85 +89,88 @@ class LetterExtractor:
             self.two_row=False
         else:
             self.two_row=True
+        if self.debug_mode:
+            print(f'Silhouette score: {score}')
+        if self.debug_mode:
 
-        print(f'Silhouette score: {score}')
+            plot_image_func = PlotImageS(
+                model_dir = self.model_dir,
+                image_dir = self.data_dir,
+                output_dir = r'/home/minhpn/Desktop/Green_Parking/one_image/visualization',
+            )
 
-        plot_image_func = PlotImageS(
-            model_dir = self.model_dir,
-            image_dir = self.data_dir,
-            output_dir = r'/home/minhpn/Desktop/Green_Parking/one_image/visualization',
-        )
-
-        plot_image_func.plot_all()
+            plot_image_func.plot_all()
 
         if self.two_row:
 
-            # clusters = defaultdict(list)
-            # for (x, y, cls_name), label in zip(detections, labels):
-            #     clusters[label].append((x, y, cls_name))
-            #
-            # sorted_labels = sorted(clusters.keys(), key=lambda label: np.mean([y for _, y, _ in clusters[label]]))
-            #
-            # sorted_class_names = []
-            # for label in sorted_labels:
-            #     sorted_cluster = sorted(clusters[label], key=lambda tup: tup[0])
-            #     class_names = [cls_name for _, _, cls_name in sorted_cluster]
-            #     sorted_class_names.append(class_names)
-            # if self.debug_mode:
-            #     print(f"(Low average y - sorted by x center): {sorted_class_names[0]}")
-            #     print(f"(High average y - sorted by x center): {sorted_class_names[1]}")
-            #
-            # upper_row = lower_row = ''
-            # for letter in sorted_class_names[0]:
-            #     upper_row += letter
-            #
-            # upper_row = upper_row[:2] + '-' + upper_row[2:]
-            #
-            # for letter in sorted_class_names[1]:
-            #     lower_row += letter
-            #
-            # final_plate = upper_row + ' ' +  lower_row
-            # if self.debug_mode:
-            #    print(f"The plate is {final_plate}")
+            clusters = defaultdict(list)
+            for (x, y, cls_name), label in zip(detections, labels):
+                clusters[label].append((x, y, cls_name))
 
+            sorted_labels = sorted(clusters.keys(), key=lambda label: np.mean([y for _, y, _ in clusters[label]]))
 
-            cluster1 = points[labels == 0]
-            cluster2 = points[labels == 1]
-
-
-            if cluster1[:, 1].mean() < cluster2[:, 1].mean():
-               top_cluster, bottom_cluster = cluster1, cluster2
-            else:
-               top_cluster, bottom_cluster = cluster2, cluster1
-            # Find the line
-            pca = PCA(n_components=1)
-            pca.fit(np.vstack([top_cluster, bottom_cluster]))
-            direction = pca.components_[0]
-            direction = direction / np.linalg.norm(direction)
-
-            top_mean = top_cluster.mean(axis=0)
-            bottom_mean = bottom_cluster.mean(axis=0)
-            #Find the point it need to passthrough
-            mid_point = (top_mean + bottom_mean) / 2
-
-            line_len = 600
-            line_vector = direction * line_len / 2
-            pt1 = mid_point - line_vector
-            pt2 = mid_point + line_vector
-
+            sorted_class_names = []
+            for label in sorted_labels:
+                sorted_cluster = sorted(clusters[label], key=lambda tup: tup[0])
+                class_names = [cls_name for _, _, cls_name in sorted_cluster]
+                sorted_class_names.append(class_names)
             if self.debug_mode:
-               plt.figure(figsize=(6, 5))
-               plt.scatter(points[:, 0], points[:, 1], c=labels, cmap='viridis')
-               plt.plot([pt1[0], pt2[0]], [pt1[1], pt2[1]], 'r--', label='Dividing Line (PCA aligned)')
-               plt.title("Clustered Rows with Dividing Line")
-               plt.xlabel("Center X")
-               plt.ylabel("Center Y")
-               plt.legend()
-               plt.gca().invert_yaxis()
-               plt.grid(True)
-               plt.show()
+                print(f"(Low average y - sorted by x center): {sorted_class_names[0]}")
+                print(f"(High average y - sorted by x center): {sorted_class_names[1]}")
 
-            #Cut the plate
+            upper_row = lower_row = ''
+            for letter in sorted_class_names[0]:
+                upper_row += letter
+
+            upper_row = upper_row[:2] + '-' + upper_row[2:]
+
+            for letter in sorted_class_names[1]:
+                lower_row += letter
+
+            final_plate = upper_row + ' ' +  lower_row
+            if self.debug_mode:
+               print(f"The plate is {final_plate}")
+
+            return final_plate
+
+
+            # cluster1 = points[labels == 0]
+            # cluster2 = points[labels == 1]
+            #
+            #
+            # if cluster1[:, 1].mean() < cluster2[:, 1].mean():
+            #    top_cluster, bottom_cluster = cluster1, cluster2
+            # else:
+            #    top_cluster, bottom_cluster = cluster2, cluster1
+            # # Find the line
+            # pca = PCA(n_components=1)
+            # pca.fit(np.vstack([top_cluster, bottom_cluster]))
+            # direction = pca.components_[0]
+            # direction = direction / np.linalg.norm(direction)
+            #
+            # top_mean = top_cluster.mean(axis=0)
+            # bottom_mean = bottom_cluster.mean(axis=0)
+            # #Find the point it need to passthrough
+            # mid_point = (top_mean + bottom_mean) / 2
+            #
+            # line_len = 600
+            # line_vector = direction * line_len / 2
+            # pt1 = mid_point - line_vector
+            # pt2 = mid_point + line_vector
+            #
+            # if self.debug_mode:
+            #    plt.figure(figsize=(6, 5))
+            #    plt.scatter(points[:, 0], points[:, 1], c=labels, cmap='viridis')
+            #    plt.plot([pt1[0], pt2[0]], [pt1[1], pt2[1]], 'r--', label='Dividing Line (PCA aligned)')
+            #    plt.title("Clustered Rows with Dividing Line")
+            #    plt.xlabel("Center X")
+            #    plt.ylabel("Center Y")
+            #    plt.legend()
+            #    plt.gca().invert_yaxis()
+            #    plt.grid(True)
+            #    plt.show()
+            #
+            # #Cut the plate
 
 
             # Optional: visualization
@@ -202,10 +210,7 @@ class LetterExtractor:
                 plt.ylabel("Center Y")
                 plt.show()
 
-            output = self.paddleOCRmodel.predict(filepath)
-
-            for res in output:
-                res.print()
+            return final
 
         # Organize characters into 2 lines based on y-median
         # y_values = [d[1] for d in detections]
