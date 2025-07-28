@@ -11,7 +11,7 @@ class PaddleOCRLineExtractor:
         self.temporary_dir = temporary_dir
         self.save_dir = save_dir
         self.text_detector = TextDetection(model_name="PP-OCRv5_mobile_det")
-        self.text_recognizer = TextRecognition()
+        self.text_recognizer = TextRecognition(model_name="PP-OCRv5_mobile_rec")
 
         os.makedirs(self.save_dir, exist_ok=True)
 
@@ -81,8 +81,14 @@ class PaddleOCRLineExtractor:
 
                 # Run text recognition
                 output = self.text_recognizer.predict(input=filepath)
+
                 for res in output:
                     all_texts.append(res['rec_text'])
+                    # -----------------------------------------------EXPERIMENTAL-------------------------------------------------------
+                    text = res['rec_text']
+                    confidence = res['rec_score']
+                    print(f'Text: {text}, Confidence: {confidence}')
+                    # -----------------------------------------------EXPERIMENTAL-------------------------------------------------------
 
             final_line = ' '.join(all_texts)
 
