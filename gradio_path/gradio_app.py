@@ -5,11 +5,12 @@ import requests
 from PIL import Image
 import io
 import base64
-
+import traceback
 #-------------------------------------------------  EXTERNAL LINKS  ----------------------------------------------------
 css_fileLink = r'/home/minhpn/Desktop/Green_Parking/gradio_path/styles.css'
 #--------------------------------------------------- FUNCTIONS ---------------------------------------------------------
 def upload_and_return_prediction_filepath(file_paths):
+
     url = "http://127.0.0.1:8000/upload-files-multiple"
 
     files = [
@@ -26,13 +27,18 @@ def upload_and_return_prediction_filepath(file_paths):
 
         result_lines = []
         for filename, info in text_data.items():
-            text = info.get("text", "No text detected")
+            text_list = info.get("text", [])
+            if isinstance(text_list, list):
+                text = ", ".join(text_list)  # ✅ Removes brackets and quotes
+            else:
+                text = str(text_list)
             result_lines.append(f"{filename}: {text}")
 
         return "\n".join(result_lines)
 
     except Exception as e:
         return f"❌ Error: {str(e)}"
+
 
 def upload_and_return_prediction_image(file_path):
     url = "http://127.0.0.1:8000/upload-files-single"
@@ -53,21 +59,28 @@ def upload_and_return_prediction_image(file_path):
         image_base64 = data.get("image", "")
 
         if not image_base64:
-            return results, dimension, None
+            return results, None
 
         #
         image_data = image_base64.split(",")[1]
         image = Image.open(io.BytesIO(base64.b64decode(image_data)))
 
-        if 'text' in data:
-            result_lines = []
-            for filename, info in data["text"].items():
-                result_lines.append(f"{info['text']}")
+        text_data = data.get("text", {})
 
-        return result_lines[0], image
+        result_lines = []
+        for filename, info in text_data.items():
+            text_list = info.get("text", [])
+            if isinstance(text_list, list):
+                text = ", ".join(text_list)
+            else:
+                text = str(text_list)
+            result_lines.append(f"{text}")
+
+        return "\n".join(result_lines), image
 
     except Exception as e:
-        return f"❌ Error: {str(e)}"
+        print(traceback.format_exc())
+        return f"❌ Error: {str(e)}", None
 
 
 #---------------------------------------------------- GUI DESIGN -------------------------------------------------------

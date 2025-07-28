@@ -1,5 +1,4 @@
 import os
-import sys
 import cv2
 from Extract_Letter_From_Plate.Functions.YOLO_plate_func.plotting import crop_and_save_rois
 from ultralytics import YOLO
@@ -27,7 +26,7 @@ class PlateExtractor:
             if filename.lower().endswith('.jpg') or filename.lower().endswith('.png') or filename.lower().endswith('.jpeg'):
                 dimension, org_dim, model_dim = self._process_single_image(filename)
                 if dimension:
-                    self.all_image_dimension.append(dimension)
+                    self.all_image_dimension.extend(dimension)
                     self.org_dim.append(org_dim)
                     self.model_dim.append(model_dim)
         self._report()
@@ -55,24 +54,22 @@ class PlateExtractor:
             print(f"❌ No plate detected: {filename}")
             return None, None, 2
 
-        #Save dimension
+        # Save all bounding boxes after scaling
+        dimensions = []
         for box in result.boxes.xyxy.tolist():
             x1, y1, x2, y2 = box
-
-        x1 *= scale_x
-        y1 *= scale_x
-        x2 *= scale_y
-        y2 *= scale_y
-
-        dimension = [x1, y1, x2, y2]
-
+            x1 *= scale_x
+            y1 *= scale_y
+            x2 *= scale_x
+            y2 *= scale_y
+            dimensions.append([x1, y1, x2, y2])
 
         # Save cropped region & calculate failure score
         not_pass_confidence = crop_and_save_rois(rgb_img, result, self.save_dir, filename)
 
         self.total_images += 1
 
-        return dimension, [orig_w, orig_h], [model_w, model_h]
+        return dimensions, [orig_w, orig_h], [model_w, model_h]
 
     def _report(self):
         print("\n" + "=" * 50)

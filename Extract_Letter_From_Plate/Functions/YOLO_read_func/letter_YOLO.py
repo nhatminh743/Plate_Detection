@@ -174,13 +174,13 @@ class LetterExtractor:
 
 
             # Optional: visualization
-            if self.debug_mode:
-                plt.scatter([x for x, y, _ in detections], [y for x, y, _ in detections], c=labels, cmap='viridis')
-                plt.gca().invert_yaxis()
-                plt.title("Clustering Boxes into Rows")
-                plt.xlabel("Center X")
-                plt.ylabel("Center Y")
-                plt.show()
+            # if self.debug_mode:
+            #     plt.scatter([x for x, y, _ in detections], [y for x, y, _ in detections], c=labels, cmap='viridis')
+            #     plt.gca().invert_yaxis()
+            #     plt.title("Clustering Boxes into Rows")
+            #     plt.xlabel("Center X")
+            #     plt.ylabel("Center Y")
+            #     plt.show()
 
         else:
             clusters = defaultdict(list)

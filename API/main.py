@@ -8,6 +8,7 @@ sys.path.append(str(PARENT_DIR))
 STATIC_DIR = BASE_DIR / "static"
 UPLOAD_DIR = STATIC_DIR / "saved_uploads"
 PLATE_DIR = STATIC_DIR / "extracted_plates"
+LINE_DIR = STATIC_DIR / "extracted_lines"
 RESULT_DIR = STATIC_DIR / "final_results"
 PLOT_DIR = STATIC_DIR / "plotted_images"
 
@@ -37,7 +38,7 @@ import os
 from fastapi.staticfiles import StaticFiles
 from Extract_Letter_From_Plate.Functions.utils import clear_directory
 from Extract_Letter_From_Plate.Functions.YOLO_plate_func import extracted_plate_YOLO
-from Extract_Letter_From_Plate.Functions.YOLO_read_func import letter_YOLO
+from Extract_Letter_From_Plate.Functions.PaddleOCR.paddleOCR import PaddleOCRLineExtractor
 from Test_models.sort_alphabetically_txt import sort_txt_by_title
 from pydantic import BaseModel
 from fastapi import HTTPException
@@ -47,6 +48,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import io
 import base64
+import re
 
 ########################        DECLARE APP        ##################################
 app = FastAPI()
@@ -88,6 +90,7 @@ async def upload_files_multiple(files: List[UploadFile] = File(...)):
 
     CURR_PLATE_DIR = create_unique_folder(pure_filename, base_dir=PLATE_DIR)
     CURR_RESULT_DIR = create_unique_folder(pure_filename, base_dir=RESULT_DIR)
+    CURR_LINE_DIR = create_unique_folder(pure_filename, base_dir=LINE_DIR)
 
     for file in files:
         file_path = os.path.join(folder, file.filename)
@@ -99,6 +102,7 @@ async def upload_files_multiple(files: List[UploadFile] = File(...)):
         session_path=folder,
         CURR_PLATE_DIR=CURR_PLATE_DIR,
         CURR_RESULT_DIR=CURR_RESULT_DIR,
+        CURR_LINE_DIR= CURR_LINE_DIR
     )
 
     result = process_uploaded_folder(req)
@@ -112,6 +116,7 @@ async def upload_files_single(file: UploadFile = File(...)):
 
     CURR_PLATE_DIR = create_unique_folder(pure_filename, base_dir=PLATE_DIR)
     CURR_RESULT_DIR = create_unique_folder(pure_filename, base_dir=RESULT_DIR)
+    CURR_LINE_DIR = create_unique_folder(pure_filename, base_dir=LINE_DIR)
 
     file_path = os.path.join(folder, file.filename)
 
@@ -125,33 +130,46 @@ async def upload_files_single(file: UploadFile = File(...)):
         session_path=folder,
         CURR_PLATE_DIR=CURR_PLATE_DIR,
         CURR_RESULT_DIR=CURR_RESULT_DIR,
+        CURR_LINE_DIR= CURR_LINE_DIR,
     )
 
     image = Image.open(io.BytesIO(contents))
 
     result, dimension, org_dim, model_dim = process_uploaded_folder(req)
-    x1, y1, x2, y2 = dimension
     fig, ax = plt.subplots()
     ax.imshow(image)
 
-    # rect = patches.Rectangle(
-    #     (x, y), w, h, linewidth=1, edgecolor='red', facecolor='none'
-    # )
-    # ax.add_patch(rect)
+    print("Result keys:", result.keys())
+    print("Dimensions:", len(dimension))
 
-    polygon_points = [(x1, y1), (x2, y1), (x2, y2), (x1, y2)]
+    if len(result) == 0:
+        return JSONResponse(content={
+            "text": 'No plate is detected in this picture.',
+            "dimension_of_plate": dimension,
+            'org_dim': org_dim,
+            'model_dim': model_dim,
+            "image": None
+        })
 
-    polygon = patches.Polygon(polygon_points, closed=True, edgecolor='blue', linewidth=2, facecolor='none')
-    ax.add_patch(polygon)
+    first_key = next(iter(result))
+    texts = result[first_key].get("text", [])
 
-    label = list(list(result.values())[0].values())[0]
-    ax.text(
-        x2 + 3, y1 - 5,
-        label,
-        fontsize=10,
-        color='white',
-        bbox=dict(facecolor='blue', edgecolor='none', boxstyle='round,pad=0.2')
-    )
+    for i, bbox in enumerate(dimension):
+        x1, y1, x2, y2 = bbox
+        polygon_points = [(x1, y1), (x2, y1), (x2, y2), (x1, y2)]
+
+        polygon = patches.Polygon(polygon_points, closed=True, edgecolor='blue', linewidth=2, facecolor='none')
+        ax.add_patch(polygon)
+
+        label_text = texts[i] if i < len(texts) else f"Plate {i + 1}"
+
+        ax.text(
+            x1, y1 - 5 - 15 * i,
+            label_text,
+            fontsize=10,
+            color='white',
+            bbox=dict(facecolor='blue', edgecolor='none', boxstyle='round,pad=0.2')
+        )
 
     plt.axis('off')
     buf = io.BytesIO()
@@ -175,12 +193,15 @@ class ProcessRequest(BaseModel):
     session_path: str  # The path returned by `/upload-file`
     CURR_PLATE_DIR: str
     CURR_RESULT_DIR: str
+    CURR_LINE_DIR: str
 
 
 
 @app.post("/process-folder")
 def process_uploaded_folder(req: ProcessRequest):
     session_path = Path(req.session_path)
+
+    CURR_LINE_DIR = Path(req.CURR_LINE_DIR)
     CURR_PLATE_DIR = Path(req.CURR_PLATE_DIR)
     CURR_RESULT_DIR = Path(req.CURR_RESULT_DIR)
 
@@ -196,6 +217,7 @@ def process_uploaded_folder(req: ProcessRequest):
     # Clear previous results
     clear_directory(str(CURR_PLATE_DIR))
     clear_directory(str(CURR_RESULT_DIR))
+    clear_directory(str(CURR_LINE_DIR))
 
     # Step 1: Detect plates
     extractor = extracted_plate_YOLO.PlateExtractor(
@@ -206,13 +228,12 @@ def process_uploaded_folder(req: ProcessRequest):
     dimension, ori_dimension, model_dimension = extractor.process_images()
 
     # Step 2: Read characters
-    reader = letter_YOLO.LetterExtractor(
-        data_dir=str(CURR_PLATE_DIR),
-        save_dir=str(CURR_RESULT_DIR),
-        best_model_file=str(YOLO_read_model),
-        debug_mode=False,
+    read = PaddleOCRLineExtractor(
+        data_dir=CURR_PLATE_DIR,
+        save_dir=CURR_RESULT_DIR,
+        temporary_dir=CURR_LINE_DIR,
     )
-    reader.process_images()
+    read.run()
 
     # Step 3: Sort OCR results
     result_txt = CURR_RESULT_DIR / "ocr_results.txt"
@@ -224,9 +245,32 @@ def process_uploaded_folder(req: ProcessRequest):
 
     print("Opening result file:", result_txt)
 
+    def extract_plate_from_text(text: str) -> str | None:
+        text = text.strip()
+        patterns = [
+            r'\b\d{2}-[A-Z]{2}\s\d{4,5}\b',  # e.g., 74-FA 12345
+            r'\b\d{2}-[A-Z]{2}\s\d{3}\.\d{2}\b',  # e.g., 74-FA 123.45
+            r'\b\d{2}-\d{2}\s\d{4,5}\b',  # e.g., 74-44 12345
+            r'\b\d{2}-\d{2}\s\d{3}\.\d{2}\b',  # e.g., 74-44 123.45
+            r'\b\d{2}-[A-Z]{2}\s\d{4,5}\b',  # e.g., 54-RZ 3288
+            r'\b\d{2}-[A-Z]\d\s\d{3}\.\d{2}\b',  # e.g., 81-B3 215.96
+            r'\b\d{2}-[A-Z]\d\s\d{4,5}\b',  # e.g., 59-X4 12194
+            r'\b\d{2}[A-Z]{1,2}[-]?\d{3}\.\d{2}\b',  # e.g., 65F-123.45, 74FA-123.45
+            r'\b\d{2}[A-Z]{1,2}[-]?\d{4,5}\b',  # e.g., 65F-12345, 74FA12345
+            r'\b\d{2}[A-Z]{1,2}\s\d{3}\.\d{2}\b',  # e.g., 74FA 123.45
+            r'\b\d{2}[A-Z]{1,2}\s\d{4,5}\b',  # e.g., 74FA 12345
+            r'\b\d{2}[A-Z]{1}\s\d{4,5}\b'     #30Y 9999
+        ]
+
+        for pattern in patterns:
+            match = re.search(pattern, text)
+            if match:
+                return match.group(0)
+        return None
+
     with open(result_txt, "r", encoding="utf-8") as f:
         for line in f:
-            print(f"[Raw Line] {repr(line)}")  # <- show full line content including \n etc
+            print(f"[Raw Line] {repr(line)}")
 
             if ':' not in line:
                 print("  [Skipped] No colon found")
@@ -235,17 +279,34 @@ def process_uploaded_folder(req: ProcessRequest):
             try:
                 img_name, ocr_text = line.strip().split(':', 1)
                 short_name = Path(img_name.strip()).stem
-                results[short_name] = {
-                    "text": ocr_text.strip()
-                }
-                print(f"  [Parsed] {short_name}: {ocr_text.strip()}")
+                plate_candidate = extract_plate_from_text(ocr_text.strip())
+                if not plate_candidate:
+                    print(f"  [Filtered out] No valid plate found in: {ocr_text.strip()}")
+                    continue
+
+                if len(plate_candidate) <7 or len(plate_candidate) > 14:
+                    print(plate_candidate)
+                    print("  [Skipped] OCR text is too short / too long")
+                    continue
+
+                if not any(char.isdigit() for char in plate_candidate):
+                    print(f"  [Filtered out] No digit found: {plate_candidate}")
+                    continue
+
+                if short_name not in results:
+                    results[short_name] = {"text": []}
+
+                results[short_name]["text"].append(plate_candidate)
+                print(f"  [Accepted] {short_name}: {plate_candidate}")
             except Exception as e:
                 print("  [Error parsing line]", e)
 
     print("Final results:", results)
-    print("Final dimension:", dimension[0])
+    print("Final dimension:", dimension)
 
-    return results, dimension[0], ori_dimension, model_dimension
+    return results, dimension, ori_dimension, model_dimension
+
+
 
 
 

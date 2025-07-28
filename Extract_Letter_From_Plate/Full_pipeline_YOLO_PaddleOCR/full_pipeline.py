@@ -3,10 +3,10 @@ from Test_models.sort_alphabetically_txt import sort_txt_by_title
 from Extract_Letter_From_Plate.Functions.utils import clear_directory
 from Extract_Letter_From_Plate.Functions.PaddleOCR.paddleOCR import PaddleOCRLineExtractor
 
-RAW_DATA_DIR = r'/home/minhpn/Desktop/Green_Parking/Dummy_Data_For_Small_Test/Raw_Data'
-EXTRACTED_PLATE_DIR = r'/home/minhpn/Desktop/Green_Parking/Dummy_Data_For_Small_Test/Extracted_Plate_Data'
-EXTRACTED_LINE_DIR = r'/home/minhpn/Desktop/Green_Parking/Dummy_Data_For_Small_Test/Extracted_Line_DIr'
-FINAL_RESULT_DIR = r'/home/minhpn/Desktop/Green_Parking/Test_models/YOLO_YOLO/Final_Result'
+RAW_DATA_DIR = r'/home/minhpn/Desktop/Green_Parking/one_image/saved'
+EXTRACTED_PLATE_DIR = r'/home/minhpn/Desktop/Green_Parking/one_image/Extracted_Plate_Data'
+EXTRACTED_LINE_DIR = r'/home/minhpn/Desktop/Green_Parking/one_image/Extracted_Line'
+FINAL_RESULT_DIR = r'/home/minhpn/Desktop/Green_Parking/one_image/Final_Result'
 YOLO_plate_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_training/runs/detect/train2/weights/best.pt'
 
 def main_pipeline():
@@ -15,6 +15,7 @@ def main_pipeline():
 
     clear_directory(EXTRACTED_PLATE_DIR)
     clear_directory(FINAL_RESULT_DIR)
+    clear_directory(EXTRACTED_LINE_DIR)
 
     # Step 1: Plate Extraction
     extractor = extracted_plate_YOLO.PlateExtractor(
@@ -26,6 +27,10 @@ def main_pipeline():
 
     read = PaddleOCRLineExtractor(
         data_dir=EXTRACTED_PLATE_DIR,
-        save_dir=EXTRACTED_PLATE_DIR,
+        save_dir=FINAL_RESULT_DIR,
+        temporary_dir=EXTRACTED_LINE_DIR,
     )
+    read.run()
 
+if __name__ == "__main__":
+    main_pipeline()
