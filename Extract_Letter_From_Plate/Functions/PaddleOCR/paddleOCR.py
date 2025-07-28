@@ -10,7 +10,7 @@ class PaddleOCRLineExtractor:
         self.data_dir = data_dir
         self.temporary_dir = temporary_dir
         self.save_dir = save_dir
-        self.text_detector = TextDetection(model_name="PP-OCRv5_server_det")
+        self.text_detector = TextDetection(model_name="PP-OCRv5_mobile_det")
         self.text_recognizer = TextRecognition()
 
         os.makedirs(self.save_dir, exist_ok=True)
