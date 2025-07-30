@@ -181,8 +181,6 @@ def parse_args(use_gpu=None, rec_model_dir=None, image_dir=None):
     if image_dir is not None:
         namespace.image_dir = image_dir
 
-    namespace = vars(namespace)
-
     return namespace
 
 
