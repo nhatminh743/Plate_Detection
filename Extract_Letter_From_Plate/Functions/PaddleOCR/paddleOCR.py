@@ -3,15 +3,17 @@ import cv2
 import numpy as np
 import re
 from collections import defaultdict
-from paddleocr import TextDetection, TextRecognition
+from paddleocr import TextDetection
+from .infer import inference
+
 
 class PaddleOCRLineExtractor:
-    def __init__(self, data_dir, temporary_dir, save_dir):
+    def __init__(self, data_dir, temporary_dir, save_dir, text_recognition_dir):
         self.data_dir = data_dir
         self.temporary_dir = temporary_dir
         self.save_dir = save_dir
         self.text_detector = TextDetection(model_name="PP-OCRv5_mobile_det")
-        self.text_recognizer = TextRecognition(model_name="PP-OCRv5_mobile_rec")
+        self.text_recognition_dir = text_recognition_dir
 
         os.makedirs(self.save_dir, exist_ok=True)
 
@@ -80,15 +82,22 @@ class PaddleOCRLineExtractor:
                 filepath = os.path.join(folderpath, filename)
 
                 # Run text recognition
-                output = self.text_recognizer.predict(input=filepath)
+                output = inference.main(use_gpu=False, image_dir=filepath, rec_model_dir=self.text_recognition_dir)
 
-                for res in output:
-                    all_texts.append(res['rec_text'])
-                    # -----------------------------------------------EXPERIMENTAL-------------------------------------------------------
-                    text = res['rec_text']
-                    confidence = res['rec_score']
-                    print(f'Text: {text}, Confidence: {confidence}')
-                    # -----------------------------------------------EXPERIMENTAL-------------------------------------------------------
+
+                text = output['rec_text']
+                score = output['rec_score']
+
+                print(f'Text: {text}, Confidence: {score}')
+                all_texts.append(text)
+
+                # for res in output:
+                #     all_texts.append(res['rec_text'])
+                #     # -----------------------------------------------EXPERIMENTAL-------------------------------------------------------
+                #     text = res['rec_text']
+                #     confidence = res['rec_score']
+                #     print(f'Text: {text}, Confidence: {confidence}')
+                #     # -----------------------------------------------EXPERIMENTAL-------------------------------------------------------
 
             final_line = ' '.join(all_texts)
 

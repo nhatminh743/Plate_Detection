@@ -17,7 +17,7 @@ BIG NOTE: LINUX dir
 '''
 YOLO_plate_model = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_training/runs/detect/train2/weights/best.pt'
 YOLO_read_model = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_Detect_Number_From_Plate/runs/content/runs/detect/train2/weights/best.pt'
-
+Paddle_OCR_Text_Recognition_Model = r'/home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/content/PaddleOCR/output/inference/PP-OCRv5_server_rec'
 '''
 BIGNOTE: WINDOW DIR
 
@@ -232,6 +232,7 @@ def process_uploaded_folder(req: ProcessRequest):
         data_dir=CURR_PLATE_DIR,
         save_dir=CURR_RESULT_DIR,
         temporary_dir=CURR_LINE_DIR,
+        text_recognition_dir=Paddle_OCR_Text_Recognition_Model
     )
     read.run()
 
@@ -246,18 +247,16 @@ def process_uploaded_folder(req: ProcessRequest):
     print("Opening result file:", result_txt)
 
     def extract_plate_from_text(text: str) -> str | None:
-        text = text.strip()
+        replace_char = '.'
+        # replace_char_2 = '-'
+        new_text = text.replace(replace_char, '')
+        # final_text = new_text.replace(replace_char_2, '')
+        text = new_text.strip()
         patterns = [
             r'\b\d{2}-[A-Z]{2}\s\d{4,5}\b',  # e.g., 74-FA 12345
-            r'\b\d{2}-[A-Z]{2}\s\d{3}\.\d{2}\b',  # e.g., 74-FA 123.45
             r'\b\d{2}-\d{2}\s\d{4,5}\b',  # e.g., 74-44 12345
-            r'\b\d{2}-\d{2}\s\d{3}\.\d{2}\b',  # e.g., 74-44 123.45
-            r'\b\d{2}-[A-Z]{2}\s\d{4,5}\b',  # e.g., 54-RZ 3288
-            r'\b\d{2}-[A-Z]\d\s\d{3}\.\d{2}\b',  # e.g., 81-B3 215.96
             r'\b\d{2}-[A-Z]\d\s\d{4,5}\b',  # e.g., 59-X4 12194
-            r'\b\d{2}[A-Z]{1,2}[-]?\d{3}\.\d{2}\b',  # e.g., 65F-123.45, 74FA-123.45
             r'\b\d{2}[A-Z]{1,2}[-]?\d{4,5}\b',  # e.g., 65F-12345, 74FA12345
-            r'\b\d{2}[A-Z]{1,2}\s\d{3}\.\d{2}\b',  # e.g., 74FA 123.45
             r'\b\d{2}[A-Z]{1,2}\s\d{4,5}\b',  # e.g., 74FA 12345
             r'\b\d{2}[A-Z]{1}\s\d{4,5}\b'     #30Y 9999
         ]

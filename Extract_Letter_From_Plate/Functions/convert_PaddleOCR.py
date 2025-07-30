@@ -1,5 +1,5 @@
-input_file = "input.txt"   # Replace with your actual input file path
-output_file = "output.txt" # Replace with your desired output file path
+input_file = r'/home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/data/label/low_confidence_predictions.txt'   # Replace with your actual input file path
+output_file = r'/Model_training/PaddleOCR_finetune/data/final.txt'
 
 with open(input_file, "r", encoding="utf-8") as infile, open(output_file, "w", encoding="utf-8") as outfile:
     for line in infile:

@@ -3,11 +3,12 @@ from Test_models.sort_alphabetically_txt import sort_txt_by_title
 from Extract_Letter_From_Plate.Functions.utils import clear_directory
 from Extract_Letter_From_Plate.Functions.PaddleOCR.paddleOCR import PaddleOCRLineExtractor
 
-RAW_DATA_DIR = r'/home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/data/raw'
-EXTRACTED_PLATE_DIR = r'/home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/data/extracted_plate'
-EXTRACTED_LINE_DIR = r'/home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/data/extracted_line'
-FINAL_RESULT_DIR = r'/home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/data/final_result'
+RAW_DATA_DIR = r'/home/minhpn/Desktop/Green_Parking/one_image/saved'
+EXTRACTED_PLATE_DIR = r'/home/minhpn/Desktop/Green_Parking/one_image/Extracted_Plate_Data'
+EXTRACTED_LINE_DIR = r'/home/minhpn/Desktop/Green_Parking/one_image/Extracted_Line'
+FINAL_RESULT_DIR = r'/home/minhpn/Desktop/Green_Parking/one_image/Final_Result'
 YOLO_plate_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/YOLOv11_training/runs/detect/train2/weights/best.pt'
+TEXT_RECOGNITION_DIR = r'/home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/content/PaddleOCR/output/inference/PP-OCRv5_server_rec'
 
 def main_pipeline():
 
@@ -29,6 +30,7 @@ def main_pipeline():
         data_dir=EXTRACTED_PLATE_DIR,
         save_dir=FINAL_RESULT_DIR,
         temporary_dir=EXTRACTED_LINE_DIR,
+        text_recognition_dir=TEXT_RECOGNITION_DIR
     )
     read.run()
 

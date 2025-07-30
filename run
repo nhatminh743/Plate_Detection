@@ -1,4 +1,4 @@
-conda activate fastAPIENV
+conda activate researchENV
 
 conda activate runENV
 
