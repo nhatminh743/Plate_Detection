@@ -3,8 +3,8 @@ import random
 import shutil
 
 # Input files and config
-input_txt = r'/home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/data/label/final_res.txt'     # your original full annotation file
-output_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/new_data'   # where to save train/test images and txts
+input_txt = r'/home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/data/final.txt'     # your original full annotation file
+output_dir = r'/home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/new_data'  # where to save train/test images and txts
 test_ratio = 0.2                # 20% test split
 
 # Create directories

@@ -7,7 +7,7 @@ import cv2
 
 #-------------------------- DECLARATION -----------------------------
 input_dir = '/home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/data/extracted_line'
-output_dir = '/home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/data/label'
+output_dir = '/Model_training/PaddleOCR_finetune/temp_data/label'
 log_file_path = os.path.join(output_dir, "low_confidence_predictions.txt")
 
 model = TextRecognition()

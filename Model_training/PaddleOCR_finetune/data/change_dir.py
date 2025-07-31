@@ -17,7 +17,7 @@ with open(input_txt, "r") as fin, open(output_txt, "w") as fout:
             filename = os.path.basename(full_path)  # e.g., CarLongPlateGen..._roi_0_0.jpg
 
             # Replace only up to /extracted_line/.../
-            root_dir = "/home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/data"
+            root_dir = "/Model_training/PaddleOCR_finetune/data"
             new_path = os.path.join(root_dir, "label", filename)
 
             fout.write(f"{new_path}\t{label}\n")
