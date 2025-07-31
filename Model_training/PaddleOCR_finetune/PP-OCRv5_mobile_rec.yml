@@ -1,18 +1,17 @@
 Global:
-  model_name: PP-OCRv5_server_rec # To use static model for inference.
+  model_name: PP-OCRv5_mobile_rec # To use static model for inference.
   debug: false
-  use_gpu: false
+  use_gpu: true
   epoch_num: 75
   log_smooth_window: 20
   print_batch_step: 10
-  save_model_dir: ./output/PP-OCRv5_server_rec
-  save_epoch_step: 1
+  save_model_dir: ./output/PP-OCRv5_mobile_rec
+  save_epoch_step: 10
   eval_batch_step: [0, 2000]
   cal_metric_during_train: true
-  calc_epoch_interval: 1
-  pretrained_model: 
+  pretrained_model: /content/drive/MyDrive/new_data/PP-OCRv5_mobile_rec_pretrained
   checkpoints:
-  save_inference_dir: /home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune
+  save_inference_dir:
   use_visualdl: false
   infer_img: doc/imgs_words/ch/word_1.jpg
   character_dict_path: ./ppocr/utils/dict/ppocrv5_dict.txt
@@ -31,7 +30,7 @@ Optimizer:
   lr:
     name: Cosine
     learning_rate: 0.0005
-    warmup_epoch: 1
+    warmup_epoch: 5
   regularizer:
     name: L2
     factor: 3.0e-05
@@ -39,11 +38,11 @@ Optimizer:
 
 Architecture:
   model_type: rec
-  algorithm: SVTR_HGNet
+  algorithm: SVTR_LCNet
   Transform:
   Backbone:
-    name: PPHGNetV2_B4
-    text_rec: True
+    name: PPLCNetV3
+    scale: 0.95
   Head:
     name: MultiHead
     head_list:
@@ -78,14 +77,19 @@ Train:
   dataset:
     name: MultiScaleDataSet
     ds_width: false
-    data_dir: /home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/new_data/train
+    data_dir: /content/drive/MyDrive/new_data/train/
     ext_op_transform_idx: 1
     label_file_list:
-    - /home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/new_data/train.txt
+    - /content/drive/MyDrive/new_data/train.txt
     transforms:
     - DecodeImage:
         img_mode: BGR
         channel_first: false
+    - RecConAug:
+        prob: 0.5
+        ext_data_num: 2
+        image_shape: [48, 320, 3]
+        max_text_length: *max_text_length
     - RecAug:
     - MultiLabelEncode:
         gtc_encode: NRTRLabelEncode
@@ -99,7 +103,7 @@ Train:
   sampler:
     name: MultiScaleSampler
     scales: [[320, 32], [320, 48], [320, 64]]
-    first_bs: &bs 8
+    first_bs: &bs 128
     fix_bs: false
     divided_factor: [8, 16] # w, h
     is_training: True
@@ -107,13 +111,13 @@ Train:
     shuffle: true
     batch_size_per_card: *bs
     drop_last: true
-    num_workers: 16
+    num_workers: 8
 Eval:
   dataset:
     name: SimpleDataSet
-    data_dir: /home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/new_data/test
+    data_dir: /content/drive/MyDrive/new_data/test
     label_file_list:
-    - /home/minhpn/Desktop/Green_Parking/Model_training/PaddleOCR_finetune/new_data/test.txt
+    - /content/drive/MyDrive/new_data/test.txt
     transforms:
     - DecodeImage:
         img_mode: BGR
@@ -132,5 +136,5 @@ Eval:
   loader:
     shuffle: false
     drop_last: false
-    batch_size_per_card: 8
+    batch_size_per_card: 128
     num_workers: 4
